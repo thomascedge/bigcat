@@ -25,7 +25,7 @@ class BookingStatus(Enum):
 
 
 class Seat(BaseModel):
-    id: Optional[PyObjectId] = Field(alias='_id', default=None)
+    id: Optional[PyObjectId] = Field(alias='_id', default=None) # primary key
     concert_id: str # foreign key
     seat_number: str
     seat_type: int
@@ -33,12 +33,12 @@ class Seat(BaseModel):
     status: int
 
 class User(BaseModel):
-    id: Optional[PyObjectId] = Field(alias='_id', default=None)
+    id: Optional[PyObjectId] = Field(alias='_id', default=None) # primary key
     name: str
     email: str
 
 class Concert(BaseModel):
-    id: Optional[PyObjectId] = Field(alias='_id', default=None)
+    id: Optional[PyObjectId] = Field(alias='_id', default=None) # primary key
     concert_id: str
     artist: str
     tour_name: str
@@ -47,7 +47,7 @@ class Concert(BaseModel):
     datetime: datetime
 
 class Booking(BaseModel):
-    id: Optional[PyObjectId] = Field(alias='_id', default=None)
+    id: Optional[PyObjectId] = Field(alias='_id', default=None) # primary key
     user_id: str  # foreign key
     concert_id: str # foreign key
     seats: list[str] # foreign keys when exploded
