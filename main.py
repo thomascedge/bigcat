@@ -70,13 +70,13 @@ async def search_concerts(artist: str|None=None, venue: str|None=None, date: str
             end_date = datetime.strptime(f'{date} 23:59', '%m-%d-%Y %H:%M')
         
         if artist and venue and date:
-            query = {'$and': [{'artist': {'$regex': artist, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}, {'date': {"$gte": start_date, "$lte": end_date}}]}
+            query = {'$and': [{'artist': {'$regex': artist, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
         elif artist and venue and not date:
             query = {'$and': [{'artist': {'$regex': artist, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}]}
         elif artist and not venue and date:
-            query = {'$and': [{'artist': {'$regex': artist, '$options': 'i'}}, {'date': {"$gte": start_date, "$lte": end_date}}]}
+            query = {'$and': [{'artist': {'$regex': artist, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
         elif not artist and venue and date:
-            query = {'$and': [{'venue': {'$regex': venue, '$options': 'i'}}, {'date': {"$gte": start_date, "$lte": end_date}}]}
+            query = {'$and': [{'venue': {'$regex': venue, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
         elif artist and not venue and not date:
             query = {'artist': {'$regex': artist, '$options': 'i'}}
         elif not artist and venue and not date:
