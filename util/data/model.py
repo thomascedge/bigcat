@@ -1,0 +1,58 @@
+from pydantic import BaseModel, Field, BeforeValidator
+from enum import Enum
+from datetime import datetime
+from typing import Optional, Annotated
+
+PyObjectId = Annotated[str, BeforeValidator(str)]
+
+
+'''------- ENUMERATIONS -------'''
+class SeatType(Enum):
+    REGULAR = 0
+    PREMIUM = 1
+    VIP = 2
+
+class SeatStatus(Enum):
+    AVAILABLE = 0
+    BOOKED = 1
+    RESERVED = 2
+
+class BookingStatus(Enum):
+    PENDING = 0
+    CONFIRMED = 1
+    CANCELLED = 2
+
+
+''' ------- DATA CLASSES -------'''
+class Seat(BaseModel):
+    id: Optional[PyObjectId] = Field(alias='_id', default=None)
+    concert_id: str # foreign key
+    seat_number: str
+    seat_type: int
+    price: float
+    status: int
+
+class User(BaseModel):
+    id: Optional[PyObjectId] = Field(alias='_id', default=None)
+    name: str
+    email: str
+
+class Concert(BaseModel):
+    id: Optional[PyObjectId] = Field(alias='_id', default=None)
+    concert_id: str
+    artist: str
+    tour_name: str
+    venue: str
+    location: str
+    datetime: datetime
+
+class ConcertCollection(BaseModel):
+    concerts: list[Concert]
+
+class Booking(BaseModel):
+    id: Optional[PyObjectId] = Field(alias='_id', default=None)
+    user_id: str  # foreign key
+    concert_id: str # foreign key
+    seats: list[str] # foreign keys when exploded
+    total_price: float
+    status: int
