@@ -7,7 +7,6 @@ from src.auth.service import verify_password, get_password_hash
 from src.logging import logger
 from src.database.core import get_database
 
-
 def get_user_by_id(user_id: str, db: Database=Depends(get_database)) -> User:
     user = db['user'].find_one({'uid': user_id})
     if not user:
