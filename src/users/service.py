@@ -1,24 +1,24 @@
 from fastapi import HTTPException, Depends
 from pymongo.database import Database
 from bson.objectid import ObjectId
-from .model import *
+from src.users.model import *
 from src.exceptions import UserNotFoundError, InvalidPasswordError, PasswordMismatchError
 from src.auth.service import verify_password, get_password_hash
 from src.logging import logger
 from src.database.core import get_database
 
 
-def get_user_by_id(user_id: str, db: Database=Depends(get_database)) -> UserResponse:
-    user = db['user'].find_one({'_id': ObjectId(user_id)})
+def get_user_by_id(user_id: str, db: Database=Depends(get_database)) -> User:
+    user = db['user'].find_one({'uid': user_id})
     if not user:
-        logger.warning(f'User not found with ID: {user_id}')
+        logger.warning(f'User not found with uid: {user_id}')
         raise UserNotFoundError(user_id)
-    logger.info(f'Successfully retrieved user with ID: {user_id}')
-    return user
+    logger.info(f'Successfully retrieved user with uid: {user_id}')
+    return User(**user)
 
 def change_password(user_id: str, password_change: PasswordChange, db: Database=Depends(get_database)) -> None:
     try:
-        user = get_user_by_id(db, user_id)
+        user = get_user_by_id(user_id, db)
 
         # verify current password
         if not verify_password(password_change.current_password, user.password_hash):
@@ -32,7 +32,7 @@ def change_password(user_id: str, password_change: PasswordChange, db: Database=
 
         # update password
         user.password_hash = get_password_hash(password_change.new_password)
-        db['user'].update_one({'_id': ObjectId(user.id)}, {'$set': {'password_hash' : user.password_hash}})
+        db['user'].update_one({'uid': str(user.uid)}, {'$set': {'password_hash' : user.password_hash}})
 
         logger.info(f'Succesfully changed password for user: {user_id}')
 

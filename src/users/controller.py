@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from pymongo.database import Database
 from src.users import model
 from src.users import service
@@ -14,6 +14,7 @@ router = APIRouter(
 def get_current_user(current_user: CurrentUser, db: DbSession):
     return service.get_user_by_id(current_user.get_userid(), db)
 
-@router.put('/change-password', response_model=model.UserResponse)
+@router.put('/change-password', status_code=status.HTTP_200_OK)
 def change_password(password_change: model.PasswordChange, current_user: CurrentUser, db: DbSession):
     service.change_password(current_user.get_userid(), password_change, db)
+    

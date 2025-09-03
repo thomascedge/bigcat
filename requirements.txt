@@ -7,6 +7,7 @@ slowapi
 python-dotenv
 PyJWT
 passlib
-# bcrpyt==4.0.1
+bcrpyt
 python-multipart
 email-validator
+loguru

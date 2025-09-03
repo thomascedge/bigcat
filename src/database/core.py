@@ -6,21 +6,20 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from pymongo.database import Database
 from typing import Annotated
-from . import logger
+from src.logging import logger
 
 load_dotenv()
 
 db_password = os.getenv('MONGO_PASSWORD')
 uri = os.getenv('DATABASE_URI').replace('db_password', db_password)
+client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where())
+logger.info(f'Successfully connected to bigcat database.')
 
-def get_database(self):
+def get_database():
     """
     Returns database
     """
-    client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where())
     db = client['bigcat']
-    
-    logger.info(f'Successfully connected to bigcat database.')
 
     try:
         yield db

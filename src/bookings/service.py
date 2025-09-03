@@ -40,11 +40,11 @@ from src.logging import logger
 # logger.info(f'Seat cache vaules: {OrderedDict(sorted(seats_cache.items()))}')
 
 def get_bookings(current_user: TokenData, db: Database=Depends(get_database)) -> list[model.BookingResponse]:
-    bookings_list = [booking for booking in db['bookings'].find({'user_id': ObjectId(current_user.get_userid())})] 
+    bookings_list = [booking for booking in db['bookings'].find({'uid': current_user.get_userid()})] 
     logger.info(f'Retrieved {len(bookings_list)} bookings for user {current_user.get_userid()}')
     return bookings_list
 
-def get_booking_by_id(current_user: TokenData, booking_id: str, db: Database=Depends(get_database)) -> model.BookingBase:
+def get_booking_by_id(current_user: TokenData, booking_id: str, db: Database=Depends(get_database)) -> model.Booking:
     if booking := db['booking'].find_one({'_id': ObjectId(booking_id)}) is None:
         logger.warning(status_code=404, detail='Concert not found.')
         raise BookingNotFoundError(booking_id)

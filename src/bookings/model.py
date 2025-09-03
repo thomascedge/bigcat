@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, BeforeValidator, ConfigDict
 from enum import Enum
 from datetime import datetime
 from typing import Optional, Annotated
+from uuid import UUID
 
 PyObjectId = Annotated[str, BeforeValidator(str)]
 
@@ -19,24 +20,26 @@ class PaymentStatus(Enum):
     AUTHORIZED = 5
 
 
-class BookingBase(BaseModel):
-    id: Optional[PyObjectId] = Field(alias='_id', default=None) # primary key
+class Booking(BaseModel):
+    uid: str
     user_id: str  # foreign key
     concert_id: str # foreign key
     seats: list[str] # foreign keys when exploded
     total_price: float
     payment_status: PaymentStatus
+    status: BookingStatus
 
-class BookingCreate(BookingBase):
+    model_config = ConfigDict(use_enum_values=True)
+
+class BookingCreate(Booking):
     pass
 
-class BookingRequest(BookingBase):
+class BookingRequest(Booking):
     request_datetime: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, use_enum_values=True)
 
 class BookingResponse(BookingRequest):
     confirmation_id: str
-    status: int
     
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, use_enum_values=True)

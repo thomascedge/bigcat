@@ -1,5 +1,7 @@
 from fastapi import HTTPException
 
+''' --------------- BOOKINGS --------------- '''
+
 class BookingError(HTTPException):
     """Base exception for todo-related errors"""
     pass
@@ -13,6 +15,8 @@ class BookingCreationError(BookingError):
     def __init__(self, error: str):
         super().__init__(status_code=500, detail=f"Failed to create booking: {error}")
 
+
+''' --------------- USERS --------------- '''
 class UserError(HTTPException):
     """Base exception for user-related errors"""
     pass

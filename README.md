@@ -11,6 +11,15 @@ uvicorn src.main:app --reload
 
 pytest
 
+docker compose up --build
+
+
+## Other Videos to Watch
+[Frontend UI](https://www.youtube.com/watch?v=G49W1xbqw2g)
+[FastAPI Admin Panel](https://www.youtube.com/watch?v=r2hzIAox0p4)
+[The Best Way to Build Real-Time Notifications](https://www.youtube.com/watch?v=MFg6Oi805wA)
+
+
 ## Requirements
 1. The concert ticket booking system should allow users to view available concerts and their seating arrangements. 
 2. Users should be able to search for concerts based on various criteria such as artist, venue, date, and time.
