@@ -1,0 +1,25 @@
+services:
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+  mongodb: 
+    image: mongo:latest
+    container_name: mongo_container
+    restart: unless-stopped
+    ports: "27017:27017"
+  depends_on:
+    - mongodb
+  volumes:
+    - ./src:/app:src
+  command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+
+mongodb:
+  image: mongodb/mongodb-community-server:6.0-ubi8
+  environment:
+    -
+    -
+  volumes:
+    - type:

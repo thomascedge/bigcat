@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pymongo
+alembic
+psycopg2-binary
+slowapi
+python-dotenv
+PyJWT
+passlib
+bcrpyt
+python-multipart
+email-validator
+loguru

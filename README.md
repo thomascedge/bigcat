@@ -4,6 +4,21 @@
 
 Using concert ticket [booking system outline](https://github.com/ashishps1/awesome-low-level-design/blob/main/problems/concert-ticket-booking-system.md) from this low-level design challenge, the code within this project creates an API on top of the system. Allowing for some modifications, the API closely adhears to the original requirements.
 
+## To Run
+
+uvicorn src.main:app --reload
+[Localhost](http://127.0.0.1:8000/docs/)
+
+pytest
+
+docker compose up --build
+
+
+## Other Videos to Watch
+[Frontend UI](https://www.youtube.com/watch?v=G49W1xbqw2g)
+[FastAPI Admin Panel](https://www.youtube.com/watch?v=r2hzIAox0p4)
+[The Best Way to Build Real-Time Notifications](https://www.youtube.com/watch?v=MFg6Oi805wA)
+
 
 ## Requirements
 1. The concert ticket booking system should allow users to view available concerts and their seating arrangements. 
@@ -36,6 +51,7 @@ Using concert ticket [booking system outline](https://github.com/ashishps1/aweso
 - Implement a payment gateway or include an API like Stripe, satisfying requirement 6
 - Implement emailing, satisifying requirement 7
 - Implement waitlist once sold out, satisifying requirement 8
+- Add QR code to update if ticket used in database
 
 ## System Design
 This is a python-based project that uses FastAPI endpoints to connect to connect a client to the booking service housed in the API Gateway. The user can search for or book tickets. Once their data is validated, the database updates and the client recieves a response.
