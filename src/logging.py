@@ -1,7 +1,7 @@
 from loguru import logger
 
 logger.add(
-    "info.log",
+    "logs/info.log",
     format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {module}:{function}:{line} - {message}",
     level="INFO",
 )
