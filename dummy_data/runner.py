@@ -1,6 +1,11 @@
 import os
-import time
 import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.join(current_dir, '..')
+sys.path.insert(0, parent_dir)
+
+import time
 from dotenv import load_dotenv
 from datetime import datetime
 from pymongo.mongo_client import MongoClient
@@ -10,6 +15,7 @@ from uuid import uuid4
 from src.users.model import *
 from src.concerts.model import *
 from src.seats.model import *
+from src.logging import logger
 
 def haim_austin_dates():
     # create seats
@@ -22,7 +28,7 @@ def haim_austin_dates():
     # GA
     for _ in range(500):
         seat = Seat(
-            uid=uuid4(),
+            uid=str(uuid4()),
             concert_id='HAIMATX2025',
             seat_number='GA',
             seat_type=2,
@@ -36,7 +42,7 @@ def haim_austin_dates():
         for row in range(1, 30):
             for seat in range(1, 23):
                 seat = Seat(
-                    uid=uuid4(),
+                    uid=str(uuid4()),
                     concert_id='HAIMATX2025',
                     seat_number=f'FLR{section} R{row} S{seat}',
                     seat_type=1,
@@ -50,7 +56,7 @@ def haim_austin_dates():
         for row in range(ord('A'), ord('X')):
             for seat in range(1, 19):
                 seat = Seat(
-                    uid=uuid4(),
+                    uid=str(uuid4()),
                     concert_id='HAIMATX2025',
                     seat_number=f'SEC{section} R{chr(row)} S{seat}',
                     seat_type=0,
@@ -63,7 +69,7 @@ def haim_austin_dates():
         for row in range(ord('A'), ord('X')):
             for seat in range(1, 19):
                 seat = Seat(
-                    uid=uuid4(),
+                    uid=str(uuid4()),
                     concert_id='HAIMATX2025',
                     seat_number=f'SEC{section} R{chr(row)} S{seat}',
                     seat_type=0,
@@ -80,6 +86,7 @@ def haim_austin_dates():
         venue='Moody Center ATX',
         location='Austin, TX, USA',
         datetime=datetime(2025, 9, 26, 19, 30, 0),
+        status=1
     )
 
     return concert, seats_list
@@ -90,7 +97,7 @@ def haim_houston_dates():
     # premium
     for _ in range(600):
         seat = Seat(
-            uid=uuid4(),
+            uid=str(uuid4()),
             concert_id='HAIMHTX2025',
             seat_number='GA',
             seat_type=0,
@@ -102,7 +109,7 @@ def haim_houston_dates():
     # vip
     for _ in range(200):
         seat = Seat(
-            uid=uuid4(),
+            uid=str(uuid4()),
             concert_id='HAIMHTX2025',
             seat_number='GA',
             seat_type=2,
@@ -114,7 +121,7 @@ def haim_houston_dates():
     # regular
     for _ in range(3000):
         seat = Seat(
-            uid=uuid4(),
+            uid=str(uuid4()),
             concert_id='HAIMHTX2025',
             seat_number='GA',
             seat_type=0,
@@ -131,6 +138,7 @@ def haim_houston_dates():
         location='Houston, TX, USA',
         venue='White Oak Music Hall Lawn',
         datetime=datetime(2025, 9, 28, 18, 30, 0),
+        status=1
     )
 
     return concert, seats_list
@@ -141,7 +149,7 @@ def juliana_austin_dates():
     # premium
     for _ in range(600):
         seat = Seat(
-            uid=uuid4(),
+            uid=str(uuid4()),
             concert_id='SERAPHIMATX2025',
             seat_number='GA',
             seat_type=0,
@@ -158,6 +166,7 @@ def juliana_austin_dates():
         location='Austin, TX, USA',
         venue='Kingdom',
         datetime=datetime(2025, 9, 5, 22, 30, 0),
+        status=1
     )
 
     return concert, seats_list
@@ -167,7 +176,7 @@ def magdelena_bay_austin_dates():
 
     for _ in range(1700):
         seat = Seat(
-            uid=uuid4(),
+            uid=str(uuid4()),
             concert_id='MAGBAYATX2025',
             seat_number='GA',
             seat_type=0,
@@ -184,6 +193,7 @@ def magdelena_bay_austin_dates():
         location='Austin, TX, USA',
         venue="Emo's Austin",
         datetime=datetime(2025, 10, 10, 21, 00, 0),
+        status=1
     )
 
     return concert, seats_list
@@ -193,7 +203,7 @@ def wolf_alice_austin_dates():
 
     for _ in range(1700):
         seat = Seat(
-            uid=uuid4(),
+            uid=str(uuid4()),
             concert_id='WOLFALICE2025',
             seat_number='GA',
             seat_type=0,
@@ -210,6 +220,7 @@ def wolf_alice_austin_dates():
         location='Austin, TX, USA',
         venue="Emo's Austin",
         datetime=datetime(2025, 9, 30, 19, 00, 0),
+        status=1
     )
 
     return concert, seats_list
@@ -241,7 +252,7 @@ if __name__ == '__main__':
     # ping for confirmation and update databases
     try:
         client.admin.command('ping')
-        print("Successfully connected to MongoDB!")
+        logger.info("Successfully connected to MongoDB!")
 
         db = client['bigcat']
 
@@ -249,16 +260,14 @@ if __name__ == '__main__':
         SEAT_CLUSTER = db['seat']
 
         # populate concerts    
-        for _ in tqdm(_create_record(CONCERT_CLUSTER, concerts), desc='Populating bigcat.concert database.', bar_format='[{elapsed}<{remaining}] {n_fmt}/{total_fmt} | {l_bar}{bar} {rate_fmt}{postfix}', colour='yellow'):
-            time.sleep(0.01)
+        # for _ in tqdm(_create_record(CONCERT_CLUSTER, concerts), desc='Populating bigcat.concert database.', bar_format='[{elapsed}<{remaining}] {n_fmt}/{total_fmt} | {l_bar}{bar} {rate_fmt}{postfix}', colour='yellow'):
+        #     time.sleep(0.01)
 
         # populate seats
         for _ in tqdm(_create_record(SEAT_CLUSTER, seats), desc='Populating bigcat.seat database.', bar_format='[{elapsed}<{remaining}] {n_fmt}/{total_fmt} | {l_bar}{bar} {rate_fmt}{postfix}', colour='red'):
             time.sleep(0.01)
 
-        print('Database successfully populated')
+        logger.info('Database successfully populated')
 
     except Exception as e:
-        print('\n------- ERROR ------')
-        print(e)
-        print('--------------------\n')
+        logger.error(str(e))

@@ -20,7 +20,7 @@ def search_seats(db: DbSession,
 def create_seats(db: DbSession, seats=list[model.Seat]):
     return service.create_seats(seats, db)
 
-@router.patch('/edit/{seat_id}')
+@router.put('/edit/{seat_id}')
 def edit_seat(seat_id: str, seat_update: model.Seat, db: DbSession):
     return service.edit_seat(seat_id, seat_update, db)
 

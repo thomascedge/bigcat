@@ -1,4 +1,35 @@
 from fastapi import HTTPException
+from enum import Enum
+
+''' --------------- BOOKINGS --------------- '''
+class BookingUpdateCode(Enum):
+    CANCELED = 0
+    SEAT_ADDED = 1
+    SEAT_REMOVED = 2
+
+class BookingError(HTTPException):
+    """Base exception for todo-related errors"""
+    pass
+
+class BookingNotFoundError(BookingError):
+    def __init__(self, booking_id=None):
+        message = "Todo not found" if booking_id is None else f"Booking with id {booking_id} not found"
+        super().__init__(status_code=404, detail=message)
+
+class BookingCreationError(BookingError):
+    def __init__(self, error: str):
+        super().__init__(status_code=500, detail=f"Failed to create booking: {error}")
+
+class BookingAlreadyUpdatedError(BookingError):
+    def __init__(self, booking_id: str, code: BookingUpdateCode, seat_id: str=None):
+        match code:
+            case BookingUpdateCode.CANCELED:
+                message = f"Booking with id {booking_id} already canceled."
+            case BookingUpdateCode.SEAT_ADDED:
+                message = f'Seat {seat_id} already added to booking with id {booking_id}'
+            case BookingUpdateCode.SEAT_REMOVED:
+                message = f'Seat {seat_id} already removed to booking with id {booking_id}'
+        super().__init__(status_code=400, detail=message)
 
 
 ''' --------------- SEATS --------------- '''
@@ -8,12 +39,17 @@ class SeatError(HTTPException):
 
 class SeatNotFoundError(SeatError):
     def __init__(self, uid=None):
-        message = 'Seat not found' if uid is None else f'Concert with id {uid} not found'
+        message = 'Seat not found' if uid is None else f'Seat with id {uid} not found'
         super().__init__(status_code=404, detail=message)
 
 class SeatCreationError(SeatError):
     def __init__(self, error: str):
         super().__init__(status_code=500, detail=f'Failed to create seat: {error}')
+
+class SeatUnavailableError(SeatError):
+    def __init__(self, uid=None):
+        message = 'Seat not found' if uid is None else f'Seat {uid} is unavailable'
+        super().__init__(status_code=400, detail=message)
 
 
 ''' --------------- CONCERTS --------------- '''
@@ -29,21 +65,6 @@ class ConcertNotFoundError(ConcertError):
 class ConcertCreationError(ConcertError):
     def __init__(self, error: str):
         super().__init__(status_code=500, detail=f'Failed to create concert: {error}')
-
-
-''' --------------- BOOKINGS --------------- '''
-class BookingError(HTTPException):
-    """Base exception for todo-related errors"""
-    pass
-
-class BookingNotFoundError(BookingError):
-    def __init__(self, booking_id=None):
-        message = "Todo not found" if booking_id is None else f"Booking with id {booking_id} not found"
-        super().__init__(status_code=404, detail=message)
-
-class BookingCreationError(BookingError):
-    def __init__(self, error: str):
-        super().__init__(status_code=500, detail=f"Failed to create booking: {error}")
 
 
 ''' --------------- USERS --------------- '''

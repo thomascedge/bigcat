@@ -132,7 +132,7 @@ def create_concert(current_user: TokenData, concert: Concert, db: Database = Dep
     
 def update_concert(current_user: TokenData, concert_id: str, concert_update: Concert, db: Database = Depends(get_database)) -> Concert:
     db['concert'].update_many({'concert_id': concert_id}, {'$set': concert_update.model_dump()})
-    logger.info(f'Concert {concert_update.concert_id} successfully updated. Created by {current_user.get_userid()}')
+    logger.info(f'Concert {concert_update.concert_id} successfully updated. Updated by {current_user.get_userid()}')
     return get_concert_by_id(concert_update.concert_id, db)
 
 def cancel_concert(current_user: TokenData, concert_id: str, db: Database = Depends(get_database)) -> Concert:

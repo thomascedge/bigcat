@@ -17,7 +17,6 @@ def get_seat_by_id(seat_id: str, db: Database=Depends(get_database)) -> Seat:
 
 def search_seats(concert_id, venue, db: Database=Depends(get_database)) -> SeatResponse:
     if concert_id or venue:
-
         if concert_id and not venue:
             query = {'concert_id': concert_id}
         elif not concert_id and venue:
@@ -28,14 +27,14 @@ def search_seats(concert_id, venue, db: Database=Depends(get_database)) -> SeatR
         seat_list = [Seat(**seat) for seat in db['seat'].find(query)]
 
         if len(seat_list) != 0:
-            logger.info(f'Retrieved {len(seat_list)} concerts.')
+            logger.info(f'Retrieved {len(seat_list)} seats.')
             return SeatResponse(seat_list==seat_list)
         else:
             logger.warning(f'No seat found.')
             raise SeatNotFoundError() 
     else:
         seat_list = [Seat(**seat) for seat in db['seat'].find()]
-        logger.info(f'Retrieved {len(seat_list)} seat.')
+        logger.info(f'Retrieved {len(seat_list)} seats.')
         return SeatResponse(seat_list==seat_list)
 
 def create_seats(current_user: TokenData, seats: list[Seat], db: Database=Depends(get_database)) -> SeatResponse:

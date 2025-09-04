@@ -27,18 +27,12 @@ class Booking(BaseModel):
     total_price: float
     payment_status: PaymentStatus
     status: BookingStatus
+    request_datetime: datetime
+    confirmation_id: str
 
     model_config = ConfigDict(use_enum_values=True)
 
-class BookingCreate(Booking):
-    pass
 
-class BookingRequest(Booking):
-    request_datetime: datetime
-
-    model_config = ConfigDict(from_attributes=True, use_enum_values=True)
-
-class BookingResponse(BookingRequest):
-    confirmation_id: str
-    
+class BookingResponse(Booking): 
+    booking_list: list[Booking]   
     model_config = ConfigDict(from_attributes=True, use_enum_values=True)
