@@ -1,6 +1,7 @@
 from fastapi import Depends
 from typing import Optional
 from pymongo.database import Database
+from src.auth.model import TokenData
 from src.database.core import get_database
 from src.concerts.model import *
 from src.exceptions import ConcertNotFoundError, ConcertCreationError
@@ -120,21 +121,21 @@ def search_concerts(concert_id: Optional[str]=None,
         logger.warning(f'No concert found.')
         raise ConcertNotFoundError()    
     
-def create_concert(concert: Concert, db: Database = Depends(get_database)) -> Concert:
+def create_concert(current_user: TokenData, concert: Concert, db: Database = Depends(get_database)) -> Concert:
     try:
         db['concert'].insert_one(concert.model_dump())
-        logger.info(f'Created new concert with id {concert.concert_id}')
+        logger.info(f'Created new concert with id {concert.concert_id}. Created by {current_user.get_userid()}.')
         return get_concert_by_id(concert.concert_id, db)
     except Exception as e:
         logger.error(f'Failed to create concert. Error {str(e)}')
         raise ConcertCreationError(str(e))
     
-def update_concert(concert_id: str, concert_update: Concert, db: Database = Depends(get_database)) -> Concert:
+def update_concert(current_user: TokenData, concert_id: str, concert_update: Concert, db: Database = Depends(get_database)) -> Concert:
     db['concert'].update_many({'concert_id': concert_id}, {'$set': concert_update.model_dump()})
-    logger.info(f'Concert {concert_update.concert_id} successfully updated')
+    logger.info(f'Concert {concert_update.concert_id} successfully updated. Updated by {current_user.get_userid()}')
     return get_concert_by_id(concert_update.concert_id, db)
 
-def cancel_concert(concert_id: str, db: Database = Depends(get_database)) -> Concert:
+def cancel_concert(current_user: TokenData, concert_id: str, db: Database = Depends(get_database)) -> Concert:
     db['concert'].update_one({'concert_id': concert_id}, {'$set': {'status': ConcertStatus.CANCELED.value}})
-    logger.info(f'Concert {concert_id} cancelled.')
+    logger.info(f'Concert {concert_id} cancelled. Cancelled by {current_user.get_userid()}')
     return get_concert_by_id(concert_id, db)
