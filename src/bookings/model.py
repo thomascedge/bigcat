@@ -1,8 +1,7 @@
-from pydantic import BaseModel, Field, BeforeValidator, ConfigDict
+from pydantic import BaseModel, BeforeValidator, ConfigDict
 from enum import Enum
 from datetime import datetime
 from typing import Optional, Annotated
-from uuid import UUID
 
 PyObjectId = Annotated[str, BeforeValidator(str)]
 

@@ -1,0 +1,140 @@
+from fastapi import Depends
+from typing import Optional
+from pymongo.database import Database
+from src.database.core import get_database
+from src.concerts.model import *
+from src.exceptions import ConcertNotFoundError, ConcertCreationError
+from src.logging import logger
+
+def get_concert_by_id(concert_id: str, db: Database = Depends(get_database)) -> Concert:
+    concert = db['concert'].find_one({'concert_id': concert_id})
+    if not concert:
+        logger.warning(f'Concert not found with concert_id: {concert_id}')
+        raise ConcertNotFoundError(concert_id)
+    logger.info(f'Retrieved concert {concert_id}.')
+    return Concert(**concert)
+
+def get_all_concerts(db: Database=Depends(get_database)) -> ConcertResponse:
+    concert_list = [Concert(**concert) for concert in db['concert'].find()]
+    logger.info(f'Retrieved {len(concert_list)} concerts.')
+    return ConcertResponse(concert_list=concert_list)
+
+def search_concerts(concert_id: Optional[str]=None, 
+                    artist: Optional[str]=None, 
+                    tour_name: Optional[str]=None,
+                    venue: Optional[str]=None,
+                    location: Optional[str]=None,
+                    date: Optional[datetime]=None, 
+                    db: Database=Depends(get_database)) -> ConcertResponse:
+    """
+    Searches database for concert data based on given query. It is assumed that a concert_id
+    will not be searched with an artist, venue, location, or date.
+    Example query: /concert/?artist=Juliana+Huxtable&date=2025-09-05T22:30:00
+
+    :param optional str concert_id: concert id
+    :param optional str artist: artist name
+    :param optional str venue: venue name
+    :param optional str location: location
+    :param optional datetime datetime: datetime object
+    :return: list of concert objects
+    :raises: ConcertNotFoundError
+    """
+    if concert_id:
+        query = {'concert_id': concert_id}
+    else:
+        # format date to datetime and get date range for querying
+        if date:
+            date = date.strftime('%m-%d-%Y')
+            start_date = datetime.strptime(f'{date} 00:00', '%m-%d-%Y %H:%M') 
+            end_date = datetime.strptime(f'{date} 23:59', '%m-%d-%Y %H:%M')
+
+        if not artist and not tour_name and not venue and not location and date:
+            query = {'datetime': {"$gte": start_date, "$lte": end_date}}
+        elif not artist and not tour_name and not venue and location and not date:
+            query = {'location': {'$regex': location, '$options': 'i'}}
+        elif not artist and not tour_name and not venue and location and date:
+            query = {'$or': [{'location': {'$regex': location, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif not artist and not tour_name and venue and not location and not date:
+            query = {'venue': {'$regex': venue, '$options': 'i'}}
+        elif not artist and not tour_name and venue and not location and date:
+            query = {'$or': [{'venue': {'$regex': venue, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif not artist and not tour_name and venue and location and not date:
+            query = {'$or': [{'venue': {'$regex': venue, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}]}
+        elif not artist and not tour_name and venue and location and date:
+            query = {'$or': [{'venue': {'$regex': venue, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif not artist and tour_name and not venue and not location and not date:
+            query = {'tour_name': {'$regex': tour_name, '$options': 'i'}}
+        elif not artist and tour_name and not venue and not location and date:
+            query = {'$or': [{'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif not artist and tour_name and not venue and location and not date:
+            query = {'$or': [{'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}]}
+        elif not artist and tour_name and not venue and location and date:
+            query = {'$or': [{'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif not artist and tour_name and venue and not location and not date:
+            query = {'$or': [{'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}]}
+        elif not artist and tour_name and venue and not location and date:
+            query = {'$or': [{'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif not artist and tour_name and venue and location and not date:
+            query = {'$or': [{'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}]}
+        elif not artist and tour_name and venue and location and date:
+            query = {'$or': [{'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif artist and not tour_name and not venue and not location and not date:
+            query = {'artist': {'$regex': artist, '$options': 'i'}}
+        elif artist and not tour_name and not venue and not location and date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif artist and not tour_name and not venue and location and not date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}]}
+        elif artist and not tour_name and not venue and location and date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif artist and not tour_name and venue and not location and not date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}]}
+        elif artist and not tour_name and venue and not location and date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif artist and not tour_name and venue and location and not date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}]}
+        elif artist and not tour_name and venue and location and date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif artist and tour_name and not venue and not location and not date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'tour_name': {'$regex': tour_name, '$options': 'i'}}]}
+        elif artist and tour_name and not venue and not location and date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif artist and tour_name and not venue and location and not date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}]}
+        elif artist and tour_name and not venue and location and date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif artist and tour_name and venue and not location and not date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}]}
+        elif artist and tour_name and venue and not location and date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        elif artist and tour_name and venue and location and not date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}]}
+        elif artist and tour_name and venue and location and date:
+            query = {'$or': [{'artist': {'$regex': artist, '$options': 'i'}}, {'tour_name': {'$regex': tour_name, '$options': 'i'}}, {'venue': {'$regex': venue, '$options': 'i'}}, {'location': {'$regex': location, '$options': 'i'}}, {'datetime': {"$gte": start_date, "$lte": end_date}}]}
+        
+    concert_list = [Concert(**concert) for concert in db['concert'].find(query)]
+
+    if len(concert_list) != 0:
+        logger.info(f'Retrieved {len(concert_list)} concerts.')
+        return ConcertResponse(concert_list=concert_list)
+    else:
+        logger.warning(f'No concert found.')
+        raise ConcertNotFoundError()    
+    
+def create_concert(concert: Concert, db: Database = Depends(get_database)) -> Concert:
+    try:
+        db['concert'].insert_one(concert.model_dump())
+        logger.info(f'Created new concert with id {concert.concert_id}')
+        return get_concert_by_id(concert.concert_id, db)
+    except Exception as e:
+        logger.error(f'Failed to create concert. Error {str(e)}')
+        raise ConcertCreationError(str(e))
+    
+def update_concert(concert_id: str, concert_update: Concert, db: Database = Depends(get_database)) -> Concert:
+    db['concert'].update_many({'concert_id': concert_id}, {'$set': concert_update.model_dump()})
+    logger.info(f'Concert {concert_update.concert_id} successfully updated')
+    return get_concert_by_id(concert_update.concert_id, db)
+
+def cancel_concert(concert_id: str, db: Database = Depends(get_database)) -> Concert:
+    db['concert'].update_one({'concert_id': concert_id}, {'$set': {'status': ConcertStatus.CANCELED.value}})
+    logger.info(f'Concert {concert_id} cancelled.')
+    return get_concert_by_id(concert_id, db)
