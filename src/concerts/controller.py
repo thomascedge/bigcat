@@ -28,16 +28,16 @@ def search_concerts(db: DbSession,
                     venue: Optional[str] = None,
                     location: Optional[str] = None, 
                     date: Optional[datetime] = None):
-    return service.serach_concerts(concert_id, artist, tour_name, venue, location, date, db)
+    return service.search_concerts(concert_id, artist, tour_name, venue, location, date, db)
 
 @router.post('/', status_code=status.HTTP_200_OK)
 def create_concert(current_user: CurrentUser, concert: model.Concert, db: DbSession):
-    return service.create_concert(concert, db)
+    return service.create_concert(current_user, concert, db)
 
 @router.patch('/{concert_id}', response_class=model.Concert)
 def update_concert(current_user: CurrentUser, concert_id: str, concert_update: model.Concert, db: DbSession):
-    return service.update_concert(concert_id, concert_update, db)
+    return service.update_concert(current_user, concert_id, concert_update, db)
 
 @router.delete('/{concert_id}', status_code=status.HTTP_202_ACCEPTED)
 def cancel_concert(current_user: CurrentUser, concert_id: str, db: DbSession):
-    service.cancel_concert(concert_id, db)
+    service.cancel_concert(current_user, concert_id, db)

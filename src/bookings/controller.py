@@ -23,6 +23,14 @@ def get_booking(current_user: CurrentUser, db: DbSession):
 def book_tickets(current_user: CurrentUser, concert_id: str, seats: str=list[str], db: DbSession):
     return service.book_tickets(current_user, concert_id, seats, db)
 
+@router.patch('/{booking_id}/add/{seat_uid}')
+def add_seat_to_booking(seat_id: str, db: DbSession):
+    return service.add_seat_to_booking(seat_id, db)
+
+@router.patch('/{booking_id}/remove/{seat_uid}/')
+def remove_seat_from_booking(seat_id: str, db: DbSession):
+    return service.remove_seat_from_booking(seat_id, db)
+
 # @router.post('/', )
 # def book_tickets(user_id: str=Body(...), concert_id: str=Body(...), seats: List[str]=Body(...)) -> Booking:
 

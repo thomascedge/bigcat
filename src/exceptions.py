@@ -1,6 +1,21 @@
 from fastapi import HTTPException
 
 
+''' --------------- SEATS --------------- '''
+class SeatError(HTTPException):
+    """Base exception for concert-related errors"""
+    pass
+
+class SeatNotFoundError(SeatError):
+    def __init__(self, uid=None):
+        message = 'Seat not found' if uid is None else f'Concert with id {uid} not found'
+        super().__init__(status_code=404, detail=message)
+
+class SeatCreationError(SeatError):
+    def __init__(self, error: str):
+        super().__init__(status_code=500, detail=f'Failed to create seat: {error}')
+
+
 ''' --------------- CONCERTS --------------- '''
 class ConcertError(HTTPException):
     """Base exception for concert-related errors"""
@@ -13,7 +28,7 @@ class ConcertNotFoundError(ConcertError):
 
 class ConcertCreationError(ConcertError):
     def __init__(self, error: str):
-        super().__init__(status_code=500, detail=f'Failed to create booking: {error}')
+        super().__init__(status_code=500, detail=f'Failed to create concert: {error}')
 
 
 ''' --------------- BOOKINGS --------------- '''

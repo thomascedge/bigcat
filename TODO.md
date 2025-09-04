@@ -26,3 +26,9 @@
 #     venue: str
 #     location: str
 #     datetime: datetime
+
+
+Future Implementations
+- Need venue dataset to link to a concert and admin user 
+    - Venue name, address, type(?)
+- eventually add fields for analytics. Admin users can view this data
