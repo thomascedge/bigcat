@@ -1,6 +1,9 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, BeforeValidator, Field
 from enum import Enum
 from datetime import datetime
+from typing import Optional, Annotated
+
+PyObjectId = Annotated[str, BeforeValidator(str)]
 
 class ConcertStatus(Enum):
     TENTATIVE = 0
@@ -12,6 +15,7 @@ class ConcertStatus(Enum):
     COMPLETED = 6
 
 class Concert(BaseModel):
+    id: Optional[PyObjectId] = Field(alias='_id', default=None) # primary key
     concert_id: str
     artist: str
     tour_name: str
@@ -23,6 +27,6 @@ class Concert(BaseModel):
     model_config = ConfigDict(use_enum_values=True)
 
 class ConcertResponse(BaseModel):
-    concert_list = list[Concert]
+    concert_list: list = list[Concert]
 
     model_config = ConfigDict(use_enum_values=True)

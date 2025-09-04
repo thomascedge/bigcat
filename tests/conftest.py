@@ -6,6 +6,7 @@ from src.auth.model import TokenData
 from src.auth.service import get_password_hash
 from src.rate_limiting import limiter
 from src.users.model import User
+from src.concerts.model import Concert, ConcertStatus
 from src.bookings.model import Booking, BookingStatus, PaymentStatus
 
 @pytest.fixture(scope='function')
@@ -33,18 +34,6 @@ def test_user():
 @pytest.fixture(scope='function')
 def test_token_data():
     return TokenData(user_id=str(uuid4()))
-
-@pytest.fixture(scope='function')
-def test_booking(test_token_data):
-    return Booking(
-        uid=str(uuid4()),
-        user_id=str(uuid4()),
-        concert_id='TESTCONCERT',
-        seats=['TESTSEAT0', 'TESTSEAT2'],
-        total_price=100.00,
-        payment_status=PaymentStatus.SUCCESS,
-        status=BookingStatus.CONFIRMED
-    )
 
 @pytest.fixture(scope='function')
 def client(db_session):
@@ -95,3 +84,27 @@ def auth_headers(client, db_session):
     token = response.json()['access_token']
 
     return {'Authorization': f'Bearer {token}'}
+
+@pytest.fixture(scope='function')
+def test_concert(test_token_data):
+    return Concert(
+        concert_id='TESTCONCERT',
+        artist='TESTARTIST',
+        tour_name='TESTTOUR',
+        venue='TESTVENUE',
+        location='TESTLOCATION',
+        datetime=datetime(2025, 1, 1),
+        status=ConcertStatus.ON_SALE.value
+    )
+
+@pytest.fixture(scope='function')
+def test_booking(test_token_data):
+    return Booking(
+        uid=str(uuid4()),
+        user_id=str(uuid4()),
+        concert_id='TESTCONCERT',
+        seats=['TESTSEAT0', 'TESTSEAT2'],
+        total_price=100.00,
+        payment_status=PaymentStatus.SUCCESS,
+        status=BookingStatus.CONFIRMED.value
+    )
