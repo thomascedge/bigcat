@@ -16,5 +16,5 @@ result = database['seat'].delete_many({'concert_id': {'$regex': 'TEST', '$option
 clean_log.info(f"Deleted {result.deleted_count} seats documents.")
 
 # detele any test bookings
-result = database['booking'].delete_many({'booking_id': {'$regex': 'TEST', '$options': 'i'}})
+result = database['booking'].delete_many({'concert_id': {'$regex': 'TEST', '$options': 'i'}})
 clean_log.info(f"Deleted {result.deleted_count} bookings documents.")

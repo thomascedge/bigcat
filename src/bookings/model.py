@@ -23,6 +23,7 @@ class Booking(BaseModel):
     uid: str
     user_id: str  # foreign key
     concert_id: str # foreign key
+    venue: str
     seats: list[str] # foreign keys when exploded
     total_price: float
     payment_status: PaymentStatus

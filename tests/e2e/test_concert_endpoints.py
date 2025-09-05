@@ -138,6 +138,9 @@ def test_concert_not_found(client: TestClient):
     response = client.get(f'/concerts/{non_existent_id}')
     assert response.status_code == 404
 
+    response = client.get(f'/concerts/search', param={'concert_id': non_existent_id})
+    assert response.status_code == 404
+
     concert_update = Concert(
             concert_id='TESTCONCERT1',
             artist='TESTARTIST1',

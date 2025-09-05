@@ -1,4 +1,4 @@
-from fastapi import HTTPException, Depends
+from fastapi import Depends
 from pymongo.database import Database
 from uuid import uuid4
 from datetime import datetime

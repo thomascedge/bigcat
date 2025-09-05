@@ -15,7 +15,7 @@ def get_seat_by_id(seat_id: str, db: Database=Depends(get_database)) -> Seat:
     logger.info(f'Retrieved seat {seat_id}.')
     return Seat(**seat)
 
-def search_seats(concert_id, venue, db: Database=Depends(get_database)) -> SeatResponse:
+def search_seats(concert_id: str, venue: str, db: Database=Depends(get_database)) -> SeatResponse:
     if concert_id or venue:
         if concert_id and not venue:
             query = {'concert_id': concert_id}
