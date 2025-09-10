@@ -60,7 +60,7 @@ def test_create_and_verify_token(db_session):
     token = auth_service.create_access_token('test@example.com', user_id, timedelta(minutes=30))
 
     token_data = auth_service.verify_token(token)
-    assert token_data.get_userid() == user_id
+    assert token_data.uid == user_id
 
     # test invalid credentials
     assert auth_service.authenticate_user('test@example.com', 'wrongpassword', db_session) is False

@@ -21,8 +21,9 @@ This endpoint is **rate-limited to 5 requests per hour per client**.
 
 ```json
 {
-  "username": "string",
   "email": "string",
+  "first_name": "string",
+  "last_name": "string",
   "password": "string"
 }
 ```
@@ -44,11 +45,13 @@ Follows the OAuth2 password flow.
 #### Request Body
 `application/x-www-form-urlencoded`
 
-| Field      | Type   | Required | Description               |
-|------------|--------|----------|---------------------------|
-| username   | string | Yes      | User’s username or email  |
-| password   | string | Yes      | User’s password           |
-| scope      | string | No       | Optional OAuth2 scopes    |
+```json
+{
+  "email": "string Required",
+  "password": "string Required",
+  "scope": "string"
+}
+```
 
 #### Response
 `application/json`
@@ -75,8 +78,9 @@ Represents the payload for registering a new user. Example fields:
 
 ```json
 {
-  "username": "string",
   "email": "string",
+  "first_name": "string",
+  "last_name": "string",
   "password": "string"
 }
 ```
@@ -109,7 +113,7 @@ Represents an authentication token returned upon successful login.
 - **FastAPI** – Web framework  
 - **MongoDB (pymongo)** – Database backend  
 - **OAuth2PasswordRequestForm** – Standardized login form  
-- **Custom services** – Implemented in `src/auth/service.py`  
+- **Authentication service** – Implemented in `src/auth/service.py`  
 - **Rate limiting** – Implemented via `src/rate_limiting.py`
 
 ---

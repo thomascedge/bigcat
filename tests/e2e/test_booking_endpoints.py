@@ -88,7 +88,7 @@ def test_booking_crud_operations(client: TestClient, auth_headers):
     patch_response = client.patch(f'/bookings/{booking.uid}/add', headers=auth_headers)
     assert patch_response.status_code == 200
     patch_response = patch_response.json()
-    assert patch_response['status'] == BookingStatus.CANCELLED.value
+    assert patch_response['status'] == BookingStatus.CANCELED.value
 
     # edit booking
     booking_update = Booking(
@@ -99,7 +99,7 @@ def test_booking_crud_operations(client: TestClient, auth_headers):
         seats=['TESTSEAT0', 'TESTSEAT1'],
         total_price=100.00,
         payment_status=PaymentStatus.FAILED,
-        status=BookingStatus.CANCELLED.value,
+        status=BookingStatus.CANCELED.value,
         request_datetime=datetime(2025, 1, 1),
         confirmation_id=CONFIRMATION_ID
     )
@@ -182,7 +182,7 @@ def test_booking_not_found(client: TestClient):
         seats=['TESTSEAT0', 'TESTSEAT1'],
         total_price=100.00,
         payment_status=PaymentStatus.FAILED,
-        status=BookingStatus.CANCELLED.value,
+        status=BookingStatus.CANCELED.value,
         request_datetime=datetime(2025, 1, 1),
         confirmation_id=str(uuid4())[:8]
     )

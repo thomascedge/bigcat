@@ -41,7 +41,7 @@ def create_seats(current_user: TokenData, seats: list[Seat], db: Database=Depend
     try:
         for seat in seats:
             db['seat'].insert_one(seat.model_dump())
-            logger.info(f'Created new seat with id {seat.uid}. Created by {current_user.get_userid()}.')
+            logger.info(f'Created new seat with id {seat.uid}. Created by {current_user.uid}.')
         return SeatResponse(seat_list=seats)
     except Exception as e:
         logger.error(f'Failed to create seat. Error {str(e)}')
@@ -49,7 +49,7 @@ def create_seats(current_user: TokenData, seats: list[Seat], db: Database=Depend
     
 def edit_seat(current_user: TokenData, seat_id: str, seat_update: Seat, db: Database=Depends(get_database)) -> Seat:
     db['seat'].update_one({'uid': seat_id}, {'$set': seat_update.model_dump()})
-    logger.info(f'Seat {seat_update.seat_id} successfully updated. Created by {current_user.get_userid()}')
+    logger.info(f'Seat {seat_update.seat_id} successfully updated. Created by {current_user.uid}')
     return get_seat_by_id(seat_update.seat_id, db)
 
 def delete_seat(current_user: TokenData, seat_id: str, db: Database=Depends(get_database)) -> None:

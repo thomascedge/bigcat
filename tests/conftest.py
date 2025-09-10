@@ -113,6 +113,7 @@ def test_booking(test_token_data):
         payment_status=PaymentStatus.SUCCESS,
         status=BookingStatus.CONFIRMED.value,
         request_datetime=datetime(2025, 1, 1),
+        update_datetime=datetime(2025, 1, 1),
         confirmation_id=CONFIRMATION_ID
     )
 
@@ -126,8 +127,9 @@ def test_booking_2(test_token_data):
         seats=['TESTSEAT0', 'TESTSEAT1'],
         total_price=100.00,
         payment_status=PaymentStatus.FAILED,
-        status=BookingStatus.CANCELLED.value,
+        status=BookingStatus.CANCELED.value,
         request_datetime=datetime(2025, 1, 1),
+        update_datetime=datetime(2025, 1, 1),
         confirmation_id=CONFIRMATION_ID
     )
 
