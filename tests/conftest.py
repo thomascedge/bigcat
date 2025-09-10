@@ -138,6 +138,7 @@ def test_seat(test_token_data):
     return Seat(
         uid=str(uuid4()),
         concert_id='TESTCONCERT',
+        venue='TESTVENUE',
         seat_number='TESTSEAT0',
         seat_type=SeatType.REGULAR.value,
         price=100.00,
@@ -149,6 +150,7 @@ def test_seat_2(test_token_data):
     return Seat(
         uid=str(uuid4()),
         concert_id='TESTCONCERT',
+        venue='TESTVENUE',
         seat_number='TESTSEAT5',
         seat_type=SeatType.REGULAR.value,
         price=100.00,

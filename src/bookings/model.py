@@ -36,5 +36,6 @@ class Booking(BaseModel):
 
 
 class BookingResponse(BaseModel): 
-    booking_list: list[Booking]   
+    booking_list: list[Booking]
+       
     model_config = ConfigDict(use_enum_values=True)

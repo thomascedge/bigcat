@@ -57,7 +57,6 @@ class TestBookingService:
         db_session['seat'].insert_one(test_seat_2.model_dump())
 
         updated_booking = bookings_service.add_seat_to_booking(test_user, test_booking.uid, test_seat_2.uid, db_session)
-        logger.debug(updated_booking)
         assert test_seat_2.uid in updated_booking.seats
 
         with pytest.raises(BookingNotFoundError):

@@ -19,9 +19,8 @@ def test_concert_crud_operations(client: TestClient, auth_headers):
     create_response = client.post(
         '/concerts/',
         headers=auth_headers,
-        json=json.dumps(concert.model_dump(), indent=4, sort_keys=True, default=str)
+        data={'concert': json.dumps(concert.model_dump(), indent=4, sort_keys=True, default=str)}
     )
-    logger.debug(f'Create response: {create_response}')
     assert create_response.status_code == 201
     create_response = create_response.json()
     assert concert.concert_id == create_response['concert_id']
@@ -86,7 +85,7 @@ def test_concert_crud_operations(client: TestClient, auth_headers):
 
     update_response = client.patch(
         f'/concerts/{concert.concert_id}',
-        json=json.dumps(concert_update.model_dump(), indent=4, sort_keys=True, default=str)
+        json={'concert_update': json.dumps(concert_update.model_dump(), indent=4, sort_keys=True, default=str)}
     )
     assert update_response.status_code == 200
     update_response = update_response.json()
@@ -116,7 +115,7 @@ def test_concert_authorization(client: TestClient):
 
     create_response = client.post(
         '/concerts/',
-        json=concert.model_dump()
+        data={'concert': json.dumps(concert.model_dump(), indent=4, sort_keys=True, default=str)}
     )
     concert_id = create_response.concert_id
 
@@ -151,7 +150,10 @@ def test_concert_not_found(client: TestClient):
             status=ConcertStatus.COMPLETED.value
         )
 
-    response = client.put(f'/concerts/{non_existent_id}', json=concert_update.model_dump())
+    response = client.put(
+        f'/concerts/{non_existent_id}', 
+        json={'concert_update': json.dumps(concert_update.model_dump(), indent=4, sort_keys=True, default=str)}
+    )
     assert response.status_code == 404
 
     response = client.delete(f'/concerts/{non_existent_id}')

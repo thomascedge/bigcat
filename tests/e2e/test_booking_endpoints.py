@@ -22,6 +22,7 @@ def test_booking_crud_operations(client: TestClient, auth_headers):
         payment_status=PaymentStatus.SUCCESS,
         status=BookingStatus.CONFIRMED.value,
         request_datetime=datetime(2025, 1, 1),
+        update_datetime=datetime(2025, 1, 1),
         confirmation_id=CONFIRMATION_ID
     )
 
@@ -101,6 +102,7 @@ def test_booking_crud_operations(client: TestClient, auth_headers):
         payment_status=PaymentStatus.FAILED,
         status=BookingStatus.CANCELED.value,
         request_datetime=datetime(2025, 1, 1),
+        update_datetime=datetime(2025, 1, 1),
         confirmation_id=CONFIRMATION_ID
     )
 
@@ -129,6 +131,7 @@ def test_booking_authorization(client: TestClient):
         payment_status=PaymentStatus.SUCCESS,
         status=BookingStatus.CONFIRMED.value,
         request_datetime=datetime(2025, 1, 1),
+        update_datetime=datetime(2025, 1, 1),
         confirmation_id=str(uuid4())[:8]
     )
 
@@ -184,6 +187,7 @@ def test_booking_not_found(client: TestClient):
         payment_status=PaymentStatus.FAILED,
         status=BookingStatus.CANCELED.value,
         request_datetime=datetime(2025, 1, 1),
+        update_datetime=datetime(2025, 1, 1),
         confirmation_id=str(uuid4())[:8]
     )
 

@@ -48,7 +48,7 @@ def authenticate_user(email: str, password: str, db: Database=Depends(get_databa
 def create_access_token(email: str, user_id: str, expires_delta: timedelta) -> str:
     encode = {
         'sub': email,
-        'id': str(user_id),
+        'id': user_id,
         'exp': datetime.now(timezone.utc) + expires_delta
     }
     return jwt.encode(encode, SECRET_KEY, ALGORITHM)

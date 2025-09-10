@@ -5,24 +5,46 @@ from src.seats.model import Seat, SeatResponse, SeatStatus, SeatType
 from datetime import datetime
 from src.logging import logger
 
+
+def thomas_test(client: TestClient, auth_headers):
+    UID = str(uuid4())
+    seat = {
+        'uid': UID,
+        'concert_id' :'TESTCONCERT',
+        'venue' :'TESTVENUE',
+        'seat_number' :'TESTSEAT0',
+        'seat_type' :SeatType.REGULAR.value,
+        'price' :100.00,
+        'status' :SeatStatus.AVAILABLE.value
+    }
+
+    # create seat
+    response = client.post(
+        '/seats/test/thomas_test', 
+        headers=auth_headers,
+        # json={'other_seat': seat}
+    )
+    logger.debug(response)
+    assert response.status_code == 200
+
 def test_seat_crud_operations(client: TestClient, auth_headers):
     UID = str(uuid4())
-    seat = Seat(
-        uid=UID,
-        concert_id='TESTCONCERT',
-        seat_number='TESTSEAT0',
-        seat_type=SeatType.REGULAR.value,
-        price=100.00,
-        status=SeatStatus.AVAILABLE.value
-    )
+    seat = {
+        'uid': UID,
+        'concert_id' :'TESTCONCERT',
+        'venue' :'TESTVENUE',
+        'seat_number' :'TESTSEAT0',
+        'seat_type' :SeatType.REGULAR.value,
+        'price' :100.00,
+        'status' :SeatStatus.AVAILABLE.value
+    }
 
     # create seat
     create_response = client.post(
         '/seats/', 
         headers=auth_headers,
-        json={[seat.model_dump()]}
+        json={'seats': [seat]}
     )
-    logger.debug(f'Create response: {create_response}')
     assert create_response.status_code == 201
     create_response = create_response.json()
     assert seat.uid == create_response['uid']
@@ -49,14 +71,15 @@ def test_seat_crud_operations(client: TestClient, auth_headers):
     assert seat.concert_id == any(seat_response['venue'] for seat_response in get_response['seat_list'])
 
     # edit seat
-    update_seat = Seat(
-        uid=UID,
-        concert_id='TESTCONCERT',
-        seat_number='TESTSEAT5',
-        seat_type=SeatType.REGULAR.value,
-        price=100.00,
-        status=SeatStatus.AVAILABLE.value
-    )
+    update_seat = {
+        'uid': UID,
+        'concert_id': 'TESTCONCERT',
+        'venue': 'TESTVENUE',
+        'seat_number': 'TESTSEAT5',
+        'seat_type': SeatType.REGULAR.value,
+        'price': 100.00,
+        'status': SeatStatus.AVAILABLE.value
+    }
 
     update_response = client.put(f'/seats/edit/{seat.uid}', 
                                  headers=auth_headers,
@@ -81,21 +104,24 @@ def test_seat_crud_operations(client: TestClient, auth_headers):
     assert get_deleted_response.status_code == 404
 
 
-def test_seat_authorization(client: TestClient):
+def test_seat_authorization(client: TestClient, auth_headers):
     # create seat
-    seat = Seat(
-        uid=str(uuid4()),
-        concert_id='TESTCONCERT',
-        seat_number='TESTSEAT0',
-        seat_type=SeatType.REGULAR.value,
-        price=100.00,
-        status=SeatStatus.AVAILABLE.value
-    )
+    seat = {
+        'uid' : str(uuid4()),
+        'concert_id' : 'TESTCONCERT',
+        'venue' : 'TESTVENUE',
+        'seat_number' : 'TESTSEAT0',
+        'seat_type' : SeatType.REGULAR.value,
+        'price' : 100.00,
+        'status' : SeatStatus.AVAILABLE.value
+    }
 
     create_response = client.post(
         '/seats/',
-        json=seat.model_dump()
+        headers=auth_headers,
+        json={'seats': seat}
     )
+    logger.debug(create_response)
     seat_id = create_response.uid
 
     # try accessing without auth
@@ -115,14 +141,15 @@ def test_seat_not_found(client: TestClient):
     response = client.get(f'/seats/', params={'client_id': non_existent_id})
     assert response.status_code == 404
 
-    seat_update = Seat(
-        uid=str(uuid4()),
-        concert_id='TESTCONCERT',
-        seat_number='TESTSEAT0',
-        seat_type=SeatType.REGULAR.value,
-        price=100.00,
-        status=SeatStatus.AVAILABLE.value
-    )
+    seat_update = {
+        'uid' : str(uuid4()),
+        'concert_id' : 'TESTCONCERT',
+        'venue' : 'TESTVENUE',
+        'seat_number' : 'TESTSEAT0',
+        'seat_type' : SeatType.REGULAR.value,
+        'price' : 100.00,
+        'status' : SeatStatus.AVAILABLE.value
+    } 
 
     response = client.put(f'/edit/{non_existent_id}', json=seat_update.model_dump())
     assert response.status_code == 404
