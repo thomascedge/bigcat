@@ -137,5 +137,6 @@ def update_concert(current_user: TokenData, concert_id: str, concert_update: Con
 
 def cancel_concert(current_user: TokenData, concert_id: str, db: Database = Depends(get_database)) -> Concert:
     db['concert'].update_one({'concert_id': concert_id}, {'$set': {'status': ConcertStatus.CANCELED.value}})
+    logger.debug(concert_id)
     logger.info(f'Concert {concert_id} CANCELED. CANCELED by {current_user.uid}')
     return get_concert_by_id(concert_id, db)

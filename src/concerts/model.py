@@ -22,7 +22,7 @@ class Concert(BaseModel):
     venue: str
     location: str
     datetime: datetime
-    status: ConcertStatus
+    status: Optional[ConcertStatus | int]
 
     model_config = ConfigDict(use_enum_values=True)
 

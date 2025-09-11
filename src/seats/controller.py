@@ -25,7 +25,7 @@ def search_seats(db: DbSession,
                   venue: Optional[str]|None=None):
     return service.search_seats(concert_id, venue, db)
 
-@router.post('/', status_code=status.HTTP_200_OK)
+@router.post('/', response_model=model.SeatResponse, status_code=status.HTTP_201_CREATED)
 def create_seats(current_user: CurrentUser, db: DbSession, seats=list[model.Seat]):
     return service.create_seats(current_user, seats, db)
 
