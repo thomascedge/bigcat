@@ -19,6 +19,7 @@ class Seat(BaseModel):
     id: Optional[PyObjectId] = Field(alias='_id', default=None) # primary key
     uid: str
     concert_id: str
+    venue: str
     seat_number: str
     seat_type: SeatType
     price: float
@@ -27,6 +28,6 @@ class Seat(BaseModel):
     model_config = ConfigDict(use_enum_values=True)
 
 class SeatResponse(BaseModel):
-    seat_list: list = list[Seat]
+    seat_list: list[Seat]
 
     model_config = ConfigDict(use_enum_values=True)

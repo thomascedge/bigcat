@@ -124,7 +124,7 @@ def search_concerts(concert_id: Optional[str]=None,
 def create_concert(current_user: TokenData, concert: Concert, db: Database = Depends(get_database)) -> Concert:
     try:
         db['concert'].insert_one(concert.model_dump())
-        logger.info(f'Created new concert with id {concert.concert_id}. Created by {current_user.get_userid()}.')
+        logger.info(f'Created new concert with id {concert.concert_id}. Created by {current_user.uid}.')
         return get_concert_by_id(concert.concert_id, db)
     except Exception as e:
         logger.error(f'Failed to create concert. Error {str(e)}')
@@ -132,10 +132,11 @@ def create_concert(current_user: TokenData, concert: Concert, db: Database = Dep
     
 def update_concert(current_user: TokenData, concert_id: str, concert_update: Concert, db: Database = Depends(get_database)) -> Concert:
     db['concert'].update_many({'concert_id': concert_id}, {'$set': concert_update.model_dump()})
-    logger.info(f'Concert {concert_update.concert_id} successfully updated. Updated by {current_user.get_userid()}')
+    logger.info(f'Concert {concert_update.concert_id} successfully updated. Updated by {current_user.uid}')
     return get_concert_by_id(concert_update.concert_id, db)
 
 def cancel_concert(current_user: TokenData, concert_id: str, db: Database = Depends(get_database)) -> Concert:
     db['concert'].update_one({'concert_id': concert_id}, {'$set': {'status': ConcertStatus.CANCELED.value}})
-    logger.info(f'Concert {concert_id} cancelled. Cancelled by {current_user.get_userid()}')
+    logger.debug(concert_id)
+    logger.info(f'Concert {concert_id} CANCELED. CANCELED by {current_user.uid}')
     return get_concert_by_id(concert_id, db)

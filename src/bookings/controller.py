@@ -21,14 +21,14 @@ def search_booking(current_user: CurrentUser,
     return service.search_booking(current_user, booking_id, venue, db)
 
 @router.post('/', status_code=status.HTTP_200_OK)
-def book_tickets(current_user: CurrentUser, concert_id: str, seats: list[str], db: DbSession):
-    return service.book_tickets(current_user, concert_id, seats, db)
+def book_tickets(current_user: CurrentUser, concert_id: str, seat_ids: list[str], db: DbSession):
+    return service.book_tickets(current_user, concert_id, seat_ids, db)
 
-@router.patch('/{booking_id}/add/{seat_uid}')
+@router.patch('/{booking_id}/add')
 def add_seat_to_booking(current_user: CurrentUser, booking_id: str, seat_id: str, db: DbSession):
     return service.add_seat_to_booking(current_user, booking_id, seat_id, db)
 
-@router.patch('/{booking_id}/remove/{seat_uid}/')
+@router.patch('/{booking_id}/remove')
 def remove_seat_from_booking(current_user: CurrentUser, booking_id: str, seat_id: str, db: DbSession):
     return service.remove_seat_from_booking(current_user, booking_id, seat_id, db)
 

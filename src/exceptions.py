@@ -13,7 +13,7 @@ class BookingError(HTTPException):
 
 class BookingNotFoundError(BookingError):
     def __init__(self, booking_id=None):
-        message = "Todo not found" if booking_id is None else f"Booking with id {booking_id} not found"
+        message = "Booking not found" if booking_id is None else f"Booking with id {booking_id} not found"
         super().__init__(status_code=404, detail=message)
 
 class BookingCreationError(BookingError):

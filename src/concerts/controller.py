@@ -16,7 +16,7 @@ router = APIRouter(
 def get_all_concerts(db: DbSession):
     return service.get_all_concerts(db)
 
-@router.get('/{concert_id}', response_model=model.Concert)
+@router.get('/id/{concert_id}', response_model=model.Concert)
 def get_concert(concert_id: str, db: DbSession):
     return service.get_concert_by_id(concert_id, db)
 
@@ -30,7 +30,7 @@ def search_concerts(db: DbSession,
                     date: Optional[datetime] = None):
     return service.search_concerts(concert_id, artist, tour_name, venue, location, date, db)
 
-@router.post('/', status_code=status.HTTP_200_OK)
+@router.post('/', response_model=model.Concert, status_code=status.HTTP_201_CREATED)
 def create_concert(current_user: CurrentUser, concert: model.Concert, db: DbSession):
     return service.create_concert(current_user, concert, db)
 
@@ -38,6 +38,6 @@ def create_concert(current_user: CurrentUser, concert: model.Concert, db: DbSess
 def update_concert(current_user: CurrentUser, concert_id: str, concert_update: model.Concert, db: DbSession):
     return service.update_concert(current_user, concert_id, concert_update, db)
 
-@router.delete('/{concert_id}', status_code=status.HTTP_202_ACCEPTED)
+@router.patch('/cancel/{concert_id}', status_code=status.HTTP_202_ACCEPTED)
 def cancel_concert(current_user: CurrentUser, concert_id: str, db: DbSession):
     service.cancel_concert(current_user, concert_id, db)

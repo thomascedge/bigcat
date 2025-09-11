@@ -8,6 +8,10 @@ from src.rate_limiting import limiter
 from src.users.model import User
 from src.concerts.model import Concert, ConcertStatus
 from src.bookings.model import Booking, BookingStatus, PaymentStatus
+from src.seats.model import Seat, SeatType, SeatStatus
+
+USER_ID = str(uuid4())
+CONFIRMATION_ID = str(uuid4())[:8]
 
 @pytest.fixture(scope='function')
 def db_session():
@@ -24,7 +28,7 @@ def test_user():
     # Create a user with a known password hash
     password_hash = get_password_hash('password123')
     return User(
-        uid=str(uuid4()),
+        uid=USER_ID,
         first_name='Test',
         last_name='User',
         email='test@example.com',
@@ -101,10 +105,54 @@ def test_concert(test_token_data):
 def test_booking(test_token_data):
     return Booking(
         uid=str(uuid4()),
-        user_id=str(uuid4()),
+        user_id=USER_ID,
         concert_id='TESTCONCERT',
-        seats=['TESTSEAT0', 'TESTSEAT2'],
+        venue='TESTVENUE',
+        seats=['TESTSEAT0', 'TESTSEAT1'],
         total_price=100.00,
         payment_status=PaymentStatus.SUCCESS,
-        status=BookingStatus.CONFIRMED.value
+        status=BookingStatus.CONFIRMED.value,
+        request_datetime=datetime(2025, 1, 1),
+        update_datetime=datetime(2025, 1, 1),
+        confirmation_id=CONFIRMATION_ID
+    )
+
+@pytest.fixture(scope='function')
+def test_booking_2(test_token_data):
+    return Booking(
+        uid=str(uuid4()),
+        user_id=USER_ID,
+        concert_id='TESTCONCERT',
+        venue='TESTVENUE',
+        seats=['TESTSEAT0', 'TESTSEAT1'],
+        total_price=100.00,
+        payment_status=PaymentStatus.FAILED,
+        status=BookingStatus.CANCELED.value,
+        request_datetime=datetime(2025, 1, 1),
+        update_datetime=datetime(2025, 1, 1),
+        confirmation_id=CONFIRMATION_ID
+    )
+
+@pytest.fixture(scope='function')
+def test_seat(test_token_data):
+    return Seat(
+        uid=str(uuid4()),
+        concert_id='TESTCONCERT',
+        venue='TESTVENUE',
+        seat_number='TESTSEAT0',
+        seat_type=SeatType.REGULAR.value,
+        price=100.00,
+        status=SeatStatus.AVAILABLE.value
+    )
+
+@pytest.fixture(scope='function')
+def test_seat_2(test_token_data):
+    return Seat(
+        uid=str(uuid4()),
+        concert_id='TESTCONCERT',
+        venue='TESTVENUE',
+        seat_number='TESTSEAT5',
+        seat_type=SeatType.REGULAR.value,
+        price=100.00,
+        status=SeatStatus.AVAILABLE.value
     )

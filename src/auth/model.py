@@ -12,9 +12,10 @@ class Token(BaseModel):
     token_type: str
 
 class TokenData(BaseModel):
-    user_id: str | None = None
+    uid: str | None = None
 
     def get_userid(self) -> str | None:
-        if self.user_id:
-            return str(self.user_id)
+        if self.uid:
+            return str(self.uid)
         return None
+    
