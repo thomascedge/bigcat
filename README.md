@@ -28,9 +28,4 @@ flowchart LR
 ```
 
 ## Endpoints Documentation
-Click the links below to see more details on each service's endpoints
-- [Auth](docs/auth.md)
-- [Bookings](docs/bookings.md)
-- [Concerts](docs/concerts.md)
-- [Deats](docs/seats.md)
-- [Users](docs/users.md)
+Documentation on the end points can be found by running `fastapi dev src/main.py`.
