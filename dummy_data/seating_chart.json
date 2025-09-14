@@ -1,0 +1,118 @@
+
+{
+    "schema": {
+      "layout": {
+        "section_name": ["number of sections", "number of rows", "number of seats", "price minimum"]
+      }  
+    },
+
+    "3TEN Austin City Limits Live": {
+        "layout": {
+            "GA": [1, 0, 350, 50]
+        }
+    },
+
+    "Antone's Austin": {
+        "layout": {
+            "GA": [1, 0, 750, 15]
+        }
+    },
+
+    "Austin City Limits Live at The Moody Theater": {
+        "layout": {
+            "GA": [1, 0, 300, 35, 50], 
+            "MEZZ": [8, 3, 25, 45],
+            "BALC": [6, 12, 22, 30]
+        }
+    },
+
+    "Brauntex Performing Arts Theatre": {
+        "layout": {
+            "GA": [1, 0, 586, 40]
+        }
+    },
+
+    "Cheatham Street Warehouse": {
+        "layout": {
+            "GA": [1, 0, 500, 20]
+        }
+    },
+
+    "Empire - Control Room": {
+        "layout": {
+            "GA": [1, 0, 300, 35]
+        }
+    },
+
+    "Germania Insurance Amphitheater": {
+        "layout": {
+            "GA-Pit": [1, 0, 800, 50],
+            "100-Level": [7, 12, 30, 65],
+            "200-Level": [4, 31, 30, 55],
+            "GA-Lawn": [1, 0, 7000, 20]
+        }
+    },
+
+    "Gruene Hall": {
+        "layout": {
+            "GA": [1, 0, 800, 20]
+        }
+    },
+
+    "Long Center for the Performing Arts - Dell Hall": {
+        "layout": {
+            "Orchestra": [3, 17, 20, 45],
+            "Parterre": [3, 9, 25, 25]
+        }
+    },
+
+    "Moody Amphitheater": {
+        "layout": {
+            "GA": [1, 0, 5000, 40]
+        }
+    },
+
+    "Moody Center": {
+        "layout": {
+            "Pit": [2, 0, 200, 200],
+            "GA": [9, 0, 100, 100],
+            "100-Level": [14, 10, 30, 90],
+            "200-Level": [9, 7, 30, 70],
+            "S-Level": [9, 3, 7, 105],
+            "P-Level": [9, 3, 7, 120]
+        }
+    },
+
+    "Paramount Theatre Austin": {
+        "layout": {
+            "Orchestra": [3, 20, 10, 60],
+            "Mezz": [4, 6, 9, 40],
+            "Balcony": [4, 8, 12, 30],
+            "Upper Balcony": [3, 9, 10, 10]
+        }
+    },
+
+    "Scoot Inn": {
+        "layout": {
+            "GA": [1, 0, 800, 25]
+        }
+    },
+
+    "Stubbs BarBQ": {
+        "layout": {
+            "GA": [1, 0, 2500, 25]
+        }
+    },
+
+    "The Concourse Project": {
+        "layout": {
+            "GA": [1, 0, 7000, 50]
+        }
+    },
+
+    "Zilker Park": {
+        "layout": {
+            "GA": [1, 0, 75000, 50]
+        }
+    }
+}

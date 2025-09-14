@@ -44,7 +44,8 @@ async def test_register_user(db_session):
         email='new@example.com',
         password='password123',
         first_name='New',
-        last_name='User'
+        last_name='User',
+        admin=False
     )
     auth_service.register_user(request, db_session)
 
@@ -56,11 +57,11 @@ async def test_register_user(db_session):
     assert user.last_name =='User'
 
 def test_create_and_verify_token(db_session):
-    user_id = str(uuid4())
-    token = auth_service.create_access_token('test@example.com', user_id, timedelta(minutes=30))
+    uid = str(uuid4())
+    token = auth_service.create_access_token('test@example.com', uid, timedelta(minutes=30))
 
     token_data = auth_service.verify_token(token)
-    assert token_data.uid == user_id
+    assert token_data.uid == uid
 
     # test invalid credentials
     assert auth_service.authenticate_user('test@example.com', 'wrongpassword', db_session) is False

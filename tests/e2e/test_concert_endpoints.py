@@ -1,27 +1,32 @@
 import json
 from fastapi.testclient import TestClient
+from uuid import uuid4
 from src.concerts.model import Concert, ConcertStatus, ConcertResponse
 from datetime import datetime
 from src.logging import logger
 
+concert_id = str(uuid4())
+
 concert = {
-    'concert_id': 'TESTCONCERT',
+    'uid': concert_id,
     'artist': 'TESTARTIST',
     'tour_name': 'TESTTOUR',
     'venue': 'TESTVENUE',
     'location': 'TESTLOCATION',
-    'datetime': datetime(2025, 1, 1).strftime("%Y-%m-%d %H:%M:%S"),
-    'status': ConcertStatus.ON_SALE.value
+    'concert_datetime': datetime(2025, 1, 1).strftime("%Y-%m-%d %H:%M:%S"),
+    'status': ConcertStatus.ON_SALE.value,
+    'update_datetime': datetime.now()
 }
 
 concert_update = {
-    'concert_id': 'TESTCONCERT',
+    'uid': concert_id,
     'artist': 'TESTARTIST1',
     'tour_name': 'TESTTOUR1',
     'venue': 'TESTVENUE1',
     'location': 'TESTLOCATION1',
-    'datetime': datetime(2025, 1, 1).strftime("%Y-%m-%d %H:%M:%S"),
-    'status': ConcertStatus.COMPLETED.value
+    'concert_datetime': datetime(2025, 1, 1).strftime("%Y-%m-%d %H:%M:%S"),
+    'status': ConcertStatus.COMPLETED.value,
+    'update_datetime': datetime.now()
 }
 
 
@@ -62,7 +67,7 @@ def test_get(client: TestClient, auth_headers):
         'tour_name': 'TESTTOUR',
         'venue': 'TESTVENUE',
         'location': 'TESTLOCATION',
-        'date': datetime(2025, 1, 1)
+        'concert_datetime': datetime(2025, 1, 1)
     }
 
     search_response = client.get(

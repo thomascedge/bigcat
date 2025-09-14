@@ -16,13 +16,14 @@ class ConcertStatus(Enum):
 
 class Concert(BaseModel):
     id: Optional[PyObjectId] = Field(alias='_id', default=None) # primary key
-    concert_id: str
+    uid: str
     artist: str
-    tour_name: str
+    tour_name: Optional[str] 
     venue: str
     location: str
-    datetime: datetime
+    concert_datetime: datetime
     status: Optional[ConcertStatus | int]
+    update_datetime: datetime
 
     model_config = ConfigDict(use_enum_values=True)
 

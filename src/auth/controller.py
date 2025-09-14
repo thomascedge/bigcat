@@ -20,3 +20,7 @@ async def register_user(request: Request, register_user_request: RegisterUserReq
 @router.post('/token', response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Database = Depends(get_database)):
     return service.login_for_access_token(form_data, db)
+
+@router.patch('/admin/{user_id}')
+async def login_for_access_token(user_id: str, has_rights: bool, db: Database = Depends(get_database)):
+    return service.login_for_access_token(user_id, has_rights, db)

@@ -27,8 +27,8 @@ def search_concerts(db: DbSession,
                     tour_name: Optional[str]=None,
                     venue: Optional[str] = None,
                     location: Optional[str] = None, 
-                    date: Optional[datetime] = None):
-    return service.search_concerts(concert_id, artist, tour_name, venue, location, date, db)
+                    concert_datetime: Optional[datetime] = None):
+    return service.search_concerts(concert_id, artist, tour_name, venue, location, concert_datetime, db)
 
 @router.post('/', response_model=model.Concert, status_code=status.HTTP_201_CREATED)
 def create_concert(current_user: CurrentUser, concert: model.Concert, db: DbSession):

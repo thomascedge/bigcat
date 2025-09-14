@@ -38,3 +38,14 @@ def change_password(user_id: str, password_change: PasswordChange, db: Database=
     except Exception as e:
         logger.error(f'Error durring password change for user {user_id}. Error {str(e)}')
         raise
+
+def change_user_admin_rights(user_id: str, has_rights: bool, db: Database=Depends(get_database)) -> User:
+    # change rights
+    db['user'].update_one({'uid': user_id}, {'$set': {'admin': has_rights}})
+
+    if has_rights:
+        logger.info(f'Rights successfully given to {user_id}.')
+    else:
+        logger.info(f'Rights successfully revoked from {user_id}.')
+
+    return get_user_by_id(user_id, db)

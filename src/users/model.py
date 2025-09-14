@@ -11,12 +11,14 @@ class User(BaseModel):
     last_name: str
     email: str
     password_hash: str
+    admin: bool
 
 class UserResponse(BaseModel):
     uid: str
     first_name: str
     last_name: str
     email: EmailStr
+    admin: bool
     
 class PasswordChange(BaseModel):
     current_password: str

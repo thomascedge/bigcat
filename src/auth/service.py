@@ -45,10 +45,10 @@ def authenticate_user(email: str, password: str, db: Database=Depends(get_databa
         return False
     return User(**user)
 
-def create_access_token(email: str, user_id: str, expires_delta: timedelta) -> str:
+def create_access_token(email: str, uid: str, expires_delta: timedelta) -> str:
     encode = {
         'sub': email,
-        'id': user_id,
+        'id': uid,
         'exp': datetime.now(timezone.utc) + expires_delta
     }
     return jwt.encode(encode, SECRET_KEY, ALGORITHM)
@@ -56,8 +56,8 @@ def create_access_token(email: str, user_id: str, expires_delta: timedelta) -> s
 def verify_token(token: str) -> TokenData:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])        
-        user_id: str = payload.get('id')
-        return TokenData(user_id=user_id)
+        uid: str = payload.get('id')
+        return TokenData(uid=uid)
     except PyJWTError as e:
         logger.warning(f'Token verification failed: {str(e)}')
         raise AuthenticationError()
@@ -70,7 +70,8 @@ def register_user(register_user_request: RegisterUserRequest, db: Database=Depen
             email=register_user_request.email,
             first_name=register_user_request.first_name,
             last_name=register_user_request.last_name,
-            password_hash=get_password_hash(register_user_request.password)
+            password_hash=get_password_hash(register_user_request.password),
+            admin=register_user_request.admin
         )
         db['user'].insert_one(create_user_mode.model_dump())
         logger.info(f'Created new user {register_user_request.email}.')
