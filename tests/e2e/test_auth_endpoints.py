@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 from src.auth.model import RegisterUserRequest
+from src.logging import logger
 
 def test_register_and_login_flow(client: TestClient):
     # Test registration
@@ -7,7 +8,8 @@ def test_register_and_login_flow(client: TestClient):
         email="test.user@example.com",
         password="testpassword123",
         first_name="Test",
-        last_name="User"
+        last_name="User",
+        admin=False
     )
     
     response = client.post("/auth/", json=register_data.model_dump())
@@ -59,8 +61,10 @@ def test_rate_limiting(client: TestClient):
                 "email": f"test{_}@example.com",
                 "password": "testpassword123",
                 "first_name": "Test",
-                "last_name": "User"
+                "last_name": "User",
+                "admin": False
             }
         )
+
     assert response.status_code == 429  # Too Many Requests 
     

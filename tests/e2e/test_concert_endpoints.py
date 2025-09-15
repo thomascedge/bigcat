@@ -30,13 +30,14 @@ concert_update = {
 }
 
 
-def test_create(client: TestClient, auth_headers):    
+def test_post(client: TestClient, auth_headers):    
     # create concert
     create_response = client.post(
         '/concerts/',
         headers=auth_headers,
-        json=concert
+        json=json.dumps(concert, indent=4, sort_keys=True, default=str)
     )
+    logger.debug(create_response.__dict__)
     assert create_response.status_code == 201
     create_response = create_response.json()
     assert concert['concert_id'] == create_response['concert_id']
@@ -47,19 +48,19 @@ def test_create(client: TestClient, auth_headers):
     # assert concert['datetime'] == create_response['datetime']
     assert concert['status'] == create_response['status']
 
-def test_get(client: TestClient, auth_headers):
+def test_get(client: TestClient):
     # get concert
-    get_response = client.get(f'/concerts/id/{concert['concert_id']}')
+    get_response = client.get(f'/concerts/id/{concert['uid']}')
     assert get_response.status_code == 200
     get_response = get_response.json()
-    assert concert['concert_id'] == get_response['concert_id']
+    assert concert['uid'] == get_response['uid']
 
     # get all concerts
     get_response = client.get(f'/concerts/')
     assert get_response.status_code == 200
     get_response = get_response.json()
     assert len(get_response) > 0
-    assert any(concert['concert_id'] == returned_concert['concert_id'] for returned_concert in get_response['concert_list'])
+    assert any(concert['uid'] == returned_concert['uid'] for returned_concert in get_response['concert_list'])
 
     # search concert
     params = { 
@@ -76,23 +77,23 @@ def test_get(client: TestClient, auth_headers):
     )
     assert search_response.status_code == 200
     search_response = search_response.json()
-    assert any(concert['concert_id'] == returned_concert['concert_id'] for returned_concert in search_response['concert_list'])
+    assert any(concert['uid'] == returned_concert['uid'] for returned_concert in search_response['concert_list'])
 
     # search concert by concert id
     search_response = client.get(
         f'/concerts/search/',
         params={ 
-            'concert_id': 'TESTCONCERT'
+            'concert_id': concert['uid']
         }
     )
     assert search_response.status_code == 200
     search_response = search_response.json()
-    assert any(concert['concert_id'] == returned_concert['concert_id'] for returned_concert in search_response['concert_list'])
+    assert any(concert['uid'] == returned_concert['uid'] for returned_concert in search_response['concert_list'])
 
 def test_patch(client: TestClient, auth_headers):
     # update concert
     update_response = client.patch(
-        f'/concerts/{concert['concert_id']}',
+        f'/concerts/{concert['uid']}',
         headers=auth_headers,
         json=concert_update
     )
@@ -120,7 +121,7 @@ def test_delete(client: TestClient, auth_headers):
 
     # cancel concert
     update_response = client.patch(
-        f'/concert/cancel/{concert['concert_id']}',
+        f'/concert/cancel/{concert['uid']}',
         headers=auth_headers
     )
     assert update_response.status_code == 202
@@ -138,8 +139,8 @@ def test_concert_authorization(client: TestClient, auth_headers):
     # try accessing without auth
     endpoints = [
         ('POST', f'/concerts/'),
-        ('PATCH', f'/concerts/{concert['concert_id']}'),
-        ('PATCH', f'/concerts/cancel/{concert['concert_id']}'),
+        ('PATCH', f'/concerts/{concert['uid']}'),
+        ('PATCH', f'/concerts/cancel/{concert['uid']}'),
     ]
 
     for method, endpoint in endpoints:

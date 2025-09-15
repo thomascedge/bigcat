@@ -34,6 +34,7 @@ def get_password_hash(password: str) -> str:
     return bcrypt_context.hash(password)
 
 def authenticate_user(email: str, password: str, db: Database=Depends(get_database)) -> User | bool:
+    user = None
     users = db['user'].find({'email': email})
 
     for user in users:

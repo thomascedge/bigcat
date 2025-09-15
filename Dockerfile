@@ -1,17 +1,7 @@
-# build stage
-FROM python:2.12-slim
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.10
 
-WORKDIR /app
+COPY ./requirements.txt /app/requirements.txt
 
-# install dependencies
-COPY requirements.txt .
-RUN pip install --no-cahce-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
-# copy project files
-COPY src/ src/
-
-# expose the port FastAPI runs on
-EXPOSE 8000
-
-# run application
-CMD ['uvicorn', 'src.main:app', '--host', '0.0.0.0', '--port', '8000']
+COPY ./app /app/app

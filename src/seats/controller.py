@@ -26,13 +26,13 @@ def search_seats(db: DbSession,
     return service.search_seats(concert_id, venue, db)
 
 @router.post('/', response_model=model.SeatResponse, status_code=status.HTTP_201_CREATED)
-def create_seats(current_user: CurrentUser, db: DbSession, seats=list[model.Seat]):
+def create_seats(current_user: CurrentUser, db: DbSession, seats: model.SeatRequest):
     return service.create_seats(current_user, seats, db)
 
 @router.put('/edit/{seat_id}')
 def edit_seat(current_user: CurrentUser, seat_id: str, seat_update: model.Seat, db: DbSession):
     return service.edit_seat(current_user, seat_id, seat_update, db)
 
-@router.delete('/{seat_id}')
+@router.delete('/{seat_id}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_seat(current_user: CurrentUser, seat_id: str, db: DbSession):
     return service.delete_seat(current_user, seat_id, db)

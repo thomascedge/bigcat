@@ -68,11 +68,11 @@ def auth_headers(client, db_session):
     response = client.post(
         '/auth/',
         json={
-            'email': 'test.user@example.com',
+            'email': 'admin@example.com',
             'password': 'testpassword123',
-            'first_name': 'Test',
+            'first_name': 'Admin',
             'last_name': 'User',
-            'admin': False
+            'admin': True
         }
     )
     assert response.status_code == 201
@@ -81,7 +81,7 @@ def auth_headers(client, db_session):
     response = client.post(
         '/auth/token',
         data={
-            "username": "test.user@example.com",
+            "username": "admin@example.com",
             "password": "testpassword123",
             "grant_type": "password"
         }
