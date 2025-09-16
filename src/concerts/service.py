@@ -13,6 +13,7 @@ def get_concert_by_id(concert_id: str, db: Database = Depends(get_database)) -> 
         logger.warning(f'Concert not found with concert_id: {concert_id}')
         raise ConcertNotFoundError(concert_id)
     logger.info(f'Retrieved concert {concert_id}.')
+    logger.debug(concert)
     return Concert(**concert)
 
 def get_all_concerts(db: Database=Depends(get_database)) -> ConcertResponse:

@@ -34,7 +34,7 @@ def search_concerts(db: DbSession,
 def create_concert(current_user: CurrentUser, concert: model.Concert, db: DbSession):
     return service.create_concert(current_user, concert, db)
 
-@router.patch('/{concert_id}', response_class=model.Concert)
+@router.patch('/{concert_id}', response_model=model.Concert)
 def update_concert(current_user: CurrentUser, concert_id: str, concert_update: model.Concert, db: DbSession):
     return service.update_concert(current_user, concert_id, concert_update, db)
 

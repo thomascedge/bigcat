@@ -25,6 +25,7 @@ def test_change_password(client: TestClient, auth_headers):
     # try logging in with new password
     login_response = client.post(
         '/auth/token',
+        headers=auth_headers,
         data={
             'username': 'test.user@example.com',
             'password': 'newpassword123',
