@@ -8,12 +8,12 @@ from src.logging import logger
 UID = str(uuid4())
 seat = {
     'uid': UID,
-    'concert_id' :'TESTCONCERT',
-    'venue' :'TESTVENUE',
-    'seat_number' :'TESTSEAT0',
-    'seat_type' :SeatType.REGULAR.value,
+    'concert_id': 'TESTCONCERT',
+    'venue': 'TESTVENUE',
+    'seat_number': 'TESTSEAT0',
+    'seat_type': SeatType.REGULAR.value,
     'price': 100.00,
-    'status' :SeatStatus.AVAILABLE.value
+    'status': SeatStatus.AVAILABLE.value
 }
 
 seat_response = SeatResponse(seat_list=[Seat(**seat)])
