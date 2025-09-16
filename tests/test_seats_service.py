@@ -18,7 +18,7 @@ class TestSeatsService:
     def test_search_seats(self, test_concert, test_seat, db_session):
         db_session['seat'].insert_one(test_seat.model_dump())
 
-        seats = seats_service.search_seats(concert_id=test_concert.concert_id, 
+        seats = seats_service.search_seats(concert_id=test_concert.uid, 
                                               db=db_session)
         assert len(seats.seat_list) > 0
 

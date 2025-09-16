@@ -37,14 +37,12 @@ def search_seats(concert_id: str|None= None, venue: str|None= None, db: Database
         logger.info(f'Retrieved {len(seat_list)} seats.')
         return SeatResponse(seat_list=seat_list)
 
-def create_seats(current_user: TokenData, seats: list[Seat], db: Database=Depends(get_database)) -> SeatResponse:
+def create_seats(current_user: TokenData, seats: SeatRequest, db: Database=Depends(get_database)) -> SeatResponse:
     try:
-        logger.debug(seats)
-        for seat in seats:
-            logger.debug(seat)
+        for seat in seats.seat_list:
             db['seat'].insert_one(seat.model_dump())
             logger.info(f'Created new seat with id {seat.uid}. Created by {current_user.uid}.')
-        return SeatResponse(seat_list=seats)
+        return SeatResponse(seat_list=seats.seat_list)
     except Exception as e:
         logger.error(f'Failed to create seat. Error {str(e)}')
         raise SeatCreationError(str(e))

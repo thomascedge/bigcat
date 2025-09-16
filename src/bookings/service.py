@@ -50,7 +50,7 @@ def search_booking(current_user: TokenData, booking_id: str|None=None, venue: st
 def book_tickets(current_user: TokenData, concert_id: str, seat_ids: list[str], db: Database=Depends(get_database)) -> Booking:
     try:
         # check if concert exists
-        concert = db['concert'].find_one({'concert_id': concert_id})
+        concert = db['concert'].find_one({'uid': concert_id})
         if concert is None:
             raise ConcertNotFoundError(concert_id=concert_id)
         
@@ -79,7 +79,7 @@ def book_tickets(current_user: TokenData, concert_id: str, seat_ids: list[str], 
         booking = Booking(
             uid=str(uuid4()),
             user_id=str(current_user.uid),
-            concert_id=concert_id,
+            concert_id=str(concert_id),
             venue=venue,
             seats=str_seat_list,
             total_price=total_price,

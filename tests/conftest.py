@@ -12,6 +12,7 @@ from src.seats.model import Seat, SeatType, SeatStatus
 
 USER_ID = str(uuid4())
 CONFIRMATION_ID = str(uuid4())[:8]
+CONCERT_ID = str(uuid4())
 
 @pytest.fixture(scope='function')
 def db_session():
@@ -26,18 +27,18 @@ def db_session():
 @pytest.fixture(scope='function')
 def test_user():
     # Create a user with a known password hash
-    password_hash = get_password_hash('password123')
     return User(
         uid=USER_ID,
         first_name='Test',
         last_name='User',
         email='test@example.com',
-        password_hash=password_hash
+        password_hash=get_password_hash('password123'),
+        admin=False
     )
 
 @pytest.fixture(scope='function')
 def test_token_data():
-    return TokenData(user_id=str(uuid4()))
+    return TokenData(uid=str(uuid4()))
 
 @pytest.fixture(scope='function')
 def client(db_session):
@@ -67,10 +68,11 @@ def auth_headers(client, db_session):
     response = client.post(
         '/auth/',
         json={
-            'email': 'test.user@example.com',
+            'email': 'admin@example.com',
             'password': 'testpassword123',
-            'first_name': 'Test',
-            'last_name': 'User'
+            'first_name': 'Admin',
+            'last_name': 'User',
+            'admin': True
         }
     )
     assert response.status_code == 201
@@ -79,7 +81,7 @@ def auth_headers(client, db_session):
     response = client.post(
         '/auth/token',
         data={
-            "username": "test.user@example.com",
+            "username": "admin@example.com",
             "password": "testpassword123",
             "grant_type": "password"
         }
@@ -92,13 +94,14 @@ def auth_headers(client, db_session):
 @pytest.fixture(scope='function')
 def test_concert(test_token_data):
     return Concert(
-        concert_id='TESTCONCERT',
+        uid=CONCERT_ID,
         artist='TESTARTIST',
         tour_name='TESTTOUR',
         venue='TESTVENUE',
         location='TESTLOCATION',
-        datetime=datetime(2025, 1, 1),
-        status=ConcertStatus.ON_SALE.value
+        concert_datetime=datetime(2025, 1, 1),
+        status=ConcertStatus.ON_SALE.value,
+        update_datetime=datetime.now()
     )
 
 @pytest.fixture(scope='function')
@@ -106,7 +109,7 @@ def test_booking(test_token_data):
     return Booking(
         uid=str(uuid4()),
         user_id=USER_ID,
-        concert_id='TESTCONCERT',
+        concert_id=CONCERT_ID,
         venue='TESTVENUE',
         seats=['TESTSEAT0', 'TESTSEAT1'],
         total_price=100.00,
@@ -122,7 +125,7 @@ def test_booking_2(test_token_data):
     return Booking(
         uid=str(uuid4()),
         user_id=USER_ID,
-        concert_id='TESTCONCERT',
+        concert_id=CONCERT_ID,
         venue='TESTVENUE',
         seats=['TESTSEAT0', 'TESTSEAT1'],
         total_price=100.00,
@@ -137,7 +140,7 @@ def test_booking_2(test_token_data):
 def test_seat(test_token_data):
     return Seat(
         uid=str(uuid4()),
-        concert_id='TESTCONCERT',
+        concert_id=CONCERT_ID,
         venue='TESTVENUE',
         seat_number='TESTSEAT0',
         seat_type=SeatType.REGULAR.value,

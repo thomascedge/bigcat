@@ -27,7 +27,11 @@ class Seat(BaseModel):
 
     model_config = ConfigDict(use_enum_values=True)
 
-class SeatResponse(BaseModel):
+class SeatRequest(BaseModel):
     seat_list: list[Seat]
 
     model_config = ConfigDict(use_enum_values=True)
+
+class SeatResponse(SeatRequest):
+    model_config = ConfigDict(use_enum_values=True)
+    

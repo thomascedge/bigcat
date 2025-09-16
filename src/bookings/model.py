@@ -28,12 +28,22 @@ class Booking(BaseModel):
     total_price: float
     payment_status: PaymentStatus
     status: BookingStatus
-    request_datetime: datetime
-    update_datetime: datetime
+    request_datetime: datetime | str
+    update_datetime: datetime | str
     confirmation_id: str
 
     model_config = ConfigDict(use_enum_values=True)
 
+
+class BookingRequest(BaseModel):
+    concert_id: str
+    seat_list: list[str]
+
+class UpdateBookingRequest(BaseModel):
+    booking_id: str
+    booking_update: Booking
+
+    model_config = ConfigDict(use_enum_values=True)
 
 class BookingResponse(BaseModel): 
     booking_list: list[Booking]

@@ -6,6 +6,7 @@ class RegisterUserRequest(BaseModel):
     first_name: str
     last_name: str
     password: str
+    admin: bool
 
 class Token(BaseModel):
     access_token: str

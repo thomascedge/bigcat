@@ -46,7 +46,7 @@ class TestBookingService:
         db_session['booking'].insert_one(test_booking.model_dump())
         db_session['concert'].insert_one(test_concert.model_dump())
         db_session['seat'].insert_one(test_seat.model_dump())
-        booking = bookings_service.book_tickets(test_user, 'TESTCONCERT',[test_seat.uid], db_session)
+        booking = bookings_service.book_tickets(test_user, test_concert.uid, [test_seat.uid], db_session)
         assert booking.concert_id == booking.concert_id
 
         with pytest.raises(BookingCreationError):
