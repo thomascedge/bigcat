@@ -16,7 +16,7 @@ class ConcertStatus(Enum):
 
 class Concert(BaseModel):
     id: Optional[PyObjectId] = Field(alias='_id', default=None) # primary key
-    uid: str
+    uid: Optional[str]
     artist: str
     tour_name: Optional[str] 
     venue: str

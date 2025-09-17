@@ -46,10 +46,11 @@ def authenticate_user(email: str, password: str, db: Database=Depends(get_databa
         return False
     return User(**user)
 
-def create_access_token(email: str, uid: str, expires_delta: timedelta) -> str:
+def create_access_token(email: str, uid: str, admin: bool, expires_delta: timedelta) -> str:
     encode = {
         'sub': email,
         'id': uid,
+        'admin': admin,
         'exp': datetime.now(timezone.utc) + expires_delta
     }
     return jwt.encode(encode, SECRET_KEY, ALGORITHM)
@@ -58,7 +59,8 @@ def verify_token(token: str) -> TokenData:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])        
         uid: str = payload.get('id')
-        return TokenData(uid=uid)
+        admin: bool = payload.get('admin')
+        return TokenData(uid=uid, admin=admin)
     except PyJWTError as e:
         logger.warning(f'Token verification failed: {str(e)}')
         raise AuthenticationError()
@@ -76,6 +78,7 @@ def register_user(register_user_request: RegisterUserRequest, db: Database=Depen
         )
         db['user'].insert_one(create_user_mode.model_dump())
         logger.info(f'Created new user {register_user_request.email}.')
+        # return RegisterUserResponse(username=register_user_request.email)
     
     except Exception as e:
         logger.error(f'Failed to register user: {register_user_request.email}. Error {str(e)}')
@@ -90,5 +93,5 @@ def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
         raise AuthenticationError()
-    token = create_access_token(user.email, user.uid, timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    token = create_access_token(user.email, user.uid, user.admin, timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     return Token(access_token=token, token_type='bearer')

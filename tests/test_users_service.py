@@ -44,14 +44,13 @@ def test_change_password_invalid_current(test_user, db_session):
             new_password_confirm='newpassword123'
         )
 
-
         users_service.change_password(test_user.uid, password_change, db_session)
 
 def test_change_password_mismatch(test_user, db_session):
     db_session['user'].insert_one(test_user.model_dump())
 
     # test invalid current password
-    with pytest.raises(PasswordMismatchError):
+    with pytest.raises(InvalidPasswordError):
         password_change = PasswordChange(
             current_password='password123',
             new_password='newpassword123',

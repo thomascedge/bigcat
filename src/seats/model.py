@@ -17,7 +17,7 @@ class SeatStatus(Enum):
 
 class Seat(BaseModel):
     id: Optional[PyObjectId] = Field(alias='_id', default=None) # primary key
-    uid: str
+    uid: Optional[str]
     concert_id: str
     venue: str
     seat_number: str

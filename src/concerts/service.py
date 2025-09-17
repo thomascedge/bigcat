@@ -1,10 +1,11 @@
 from fastapi import Depends
 from typing import Optional
 from pymongo.database import Database
+from uuid import uuid4
 from src.auth.model import TokenData
 from src.database.core import get_database
 from src.concerts.model import *
-from src.exceptions import ConcertNotFoundError, ConcertCreationError
+from src.exceptions import ConcertNotFoundError, ConcertCreationError, NoAdminPermissions
 from src.logging import logger
 
 def get_concert_by_id(concert_id: str, db: Database = Depends(get_database)) -> Concert:
@@ -13,7 +14,6 @@ def get_concert_by_id(concert_id: str, db: Database = Depends(get_database)) -> 
         logger.warning(f'Concert not found with concert_id: {concert_id}')
         raise ConcertNotFoundError(concert_id)
     logger.info(f'Retrieved concert {concert_id}.')
-    logger.debug(concert)
     return Concert(**concert)
 
 def get_all_concerts(db: Database=Depends(get_database)) -> ConcertResponse:
@@ -123,7 +123,13 @@ def search_concerts(concert_id: Optional[str]=None,
         raise ConcertNotFoundError()    
     
 def create_concert(current_user: TokenData, concert: Concert, db: Database = Depends(get_database)) -> Concert:
+    if not current_user.admin:
+        raise NoAdminPermissions()
+
     try:
+        if concert.uid == '' or concert.uid == None:
+            concert.uid = str(uuid4())
+
         db['concert'].insert_one(concert.model_dump())
         logger.info(f'Created new concert with id {concert.uid}. Created by {current_user.uid}.')
         return get_concert_by_id(concert.uid, db)
@@ -132,12 +138,17 @@ def create_concert(current_user: TokenData, concert: Concert, db: Database = Dep
         raise ConcertCreationError(str(e))
     
 def update_concert(current_user: TokenData, concert_id: str, concert_update: Concert, db: Database = Depends(get_database)) -> Concert:
+    if not current_user.admin:
+        raise NoAdminPermissions()
+    
     db['concert'].update_many({'uid': concert_id}, {'$set': concert_update.model_dump()})
     logger.info(f'Concert {concert_update.uid} successfully updated. Updated by {current_user.uid}')
     return get_concert_by_id(concert_update.uid, db)
 
 def cancel_concert(current_user: TokenData, concert_id: str, db: Database = Depends(get_database)) -> Concert:
+    if not current_user.admin:
+        raise NoAdminPermissions()
+    
     db['concert'].update_one({'uid': concert_id}, {'$set': {'status': ConcertStatus.CANCELED.value}})
-    logger.debug(concert_id)
     logger.info(f'Concert {concert_id} CANCELED. CANCELED by {current_user.uid}')
     return get_concert_by_id(concert_id, db)
