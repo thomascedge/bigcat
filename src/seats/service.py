@@ -1,10 +1,11 @@
 from fastapi import Depends
 from typing import Optional
 from pymongo.database import Database
+from uuid import uuid4
 from src.database.core import get_database
 from src.auth.model import TokenData
 from src.seats.model import *
-from src.exceptions import SeatNotFoundError, SeatCreationError
+from src.exceptions import SeatNotFoundError, SeatCreationError, NoAdminPermissions
 from src.logging import logger
 
 def get_seat_by_id(seat_id: str, db: Database=Depends(get_database)) -> Seat:
@@ -38,8 +39,14 @@ def search_seats(concert_id: str|None= None, venue: str|None= None, db: Database
         return SeatResponse(seat_list=seat_list)
 
 def create_seats(current_user: TokenData, seats: SeatRequest, db: Database=Depends(get_database)) -> SeatResponse:
+    if not current_user.admin:
+        raise NoAdminPermissions()
+    
     try:
         for seat in seats.seat_list:
+            if seat.uid == '' or seat.uid == None:
+                seat.uid = str(uuid4())
+
             db['seat'].insert_one(seat.model_dump())
             logger.info(f'Created new seat with id {seat.uid}. Created by {current_user.uid}.')
         return SeatResponse(seat_list=seats.seat_list)
@@ -48,6 +55,9 @@ def create_seats(current_user: TokenData, seats: SeatRequest, db: Database=Depen
         raise SeatCreationError(str(e))
     
 def edit_seat(current_user: TokenData, seat_id: str, seat_update: Seat, db: Database=Depends(get_database)) -> Seat:
+    if not current_user.admin:
+        raise NoAdminPermissions()
+
     db['seat'].update_one(
         {'uid': seat_id}, 
         {'$set': {
@@ -63,5 +73,8 @@ def edit_seat(current_user: TokenData, seat_id: str, seat_update: Seat, db: Data
     return get_seat_by_id(seat_id, db)
 
 def delete_seat(current_user: TokenData, seat_id: str, db: Database=Depends(get_database)) -> None:
+    if not current_user.admin:
+        raise NoAdminPermissions()
+    
     db['seat'].delete_one({'uid': seat_id})
     logger.info(f'Seat {seat_id} removed by {current_user.uid}.')

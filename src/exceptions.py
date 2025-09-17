@@ -1,6 +1,11 @@
 from fastapi import HTTPException
 from enum import Enum
 
+''' --------------- ADMIN --------------- '''
+class NoAdminPermissions(HTTPException):
+    def __init__(self):
+        super().__init__(status_code=401, detail='User does not have admin permissions.')
+
 ''' --------------- BOOKINGS --------------- '''
 class BookingUpdateCode(Enum):
     CANCELED = 0

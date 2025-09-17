@@ -13,7 +13,6 @@ router = APIRouter(
 @router.get('/test/{seat}')
 def testing(seat: str):
     from src.logging import logger
-    logger.debug(f'{seat}')
 
 @router.get('/{seat_id}', response_model=model.Seat)
 def get_seat_by_id(seat_id: str, db: DbSession):

@@ -68,7 +68,6 @@ def test_put(client: TestClient, auth_headers):
                                  headers=auth_headers,
                                  json=update_seat)
     
-    logger.debug(update_response.__dict__)
     assert update_response.status_code == 200
     update_response = update_response.json()
     assert update_seat['seat_number'] == update_response['seat_number']
@@ -104,7 +103,6 @@ def test_seat_authorization(client: TestClient, auth_headers):
     )
 
     seat_id = create_response.json()
-    logger.debug(seat_id)
 
     # try accessing without auth
     endpoints = [

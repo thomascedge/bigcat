@@ -37,7 +37,6 @@ def test_post(client: TestClient, auth_headers):
         headers=auth_headers,
         json=concert
     )
-    logger.debug(create_response.__dict__)
     assert create_response.status_code == 201
     create_response = create_response.json()
     assert concert['uid'] == create_response['uid']
@@ -98,8 +97,6 @@ def test_patch(client: TestClient, auth_headers):
         json=concert_update
     )
 
-    logger.debug(update_response.content)
-
     assert update_response.status_code == 200
     update_response = update_response.json()
     assert concert_update['artist'] == update_response['artist']
@@ -159,5 +156,4 @@ def test_concert_not_found(client: TestClient, auth_headers):
     #     headers=auth_headers,
     #     json=concert_update
     # )
-    # logger.debug(response.__dict__)
     # assert response.status_code == 404

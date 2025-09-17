@@ -8,7 +8,8 @@ from src.exceptions import (
     BookingUpdateCode,
     BookingNotFoundError,
     BookingAlreadyUpdatedError,
-    BookingCreationError
+    BookingCreationError,
+    NoAdminPermissions
 )
 from src.logging import logger
 
@@ -91,10 +92,13 @@ class TestBookingService:
         with pytest.raises(BookingAlreadyUpdatedError):
             bookings_service.cancel_booking(test_user, test_booking.uid, db_session)
 
-    def test_edit_booking(self, test_user, test_booking, test_booking_2, db_session):
+    def test_edit_booking(self, test_user, test_user_admin, test_booking, test_booking_2, db_session):
         db_session['booking'].insert_one(test_booking.model_dump())
 
-        updated_booking = bookings_service.edit_booking(test_user, test_booking.uid, test_booking_2, db_session)
+        updated_booking = bookings_service.edit_booking(test_user_admin, test_booking.uid, test_booking_2, db_session)
         assert updated_booking.payment_status == test_booking_2.payment_status
         assert updated_booking.status == test_booking_2.status
+
+        with pytest.raises(NoAdminPermissions):
+            bookings_service.edit_booking(test_user, test_booking.uid, test_booking_2, db_session)
         

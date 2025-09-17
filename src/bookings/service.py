@@ -13,7 +13,8 @@ from src.exceptions import (
     BookingAlreadyUpdatedError,
     BookingUpdateCode,
     ConcertNotFoundError, 
-    SeatUnavailableError
+    SeatUnavailableError,
+    NoAdminPermissions
 )
 from src.logging import logger
 
@@ -171,6 +172,9 @@ def cancel_booking(current_user: TokenData, booking_id: str, db: Database=Depend
     return get_booking_by_id(current_user, booking_id, db)
 
 def edit_booking(current_user: TokenData, booking_id: str, booking_update: Booking, db: Database=Depends(get_database)) -> Booking:
+    if not current_user.admin:
+        raise NoAdminPermissions()
+    
     db['booking'].update_one(
         {'uid': booking_id}, 
         {'$set':{

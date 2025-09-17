@@ -1,7 +1,24 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.10
+FROM python:3.10-slim
 
-COPY ./requirements.txt /app/requirements.txt
+LABEL maintainer="thomas@thomascedge.com"
 
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+# unbuffered env variables
+ENV PYTHONUNBUFFERED 1
 
-COPY ./app /app/app
+WORKDIR /src
+
+# copy requirements file over
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# copy application to container
+COPY . /src 
+
+# FastAPI port
+EXPOSE 8000
+
+# Healthcheck to monitor the application
+HEALTHCHECK CMD ["curl", "--fail", "http://localhost:8000", "||", "exit 1"]
+
+# run the application
+CMD ["uvicorn", "src.main:src", "--host", "0.0.0.0", "--port", "8000"]

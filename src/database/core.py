@@ -20,10 +20,11 @@ def get_database():
     Returns database
     """
     db = client['bigcat']
+    return db
 
-    try:
-        yield db
-    finally: 
-        client.close()
+    # try:
+    #     yield db
+    # finally: 
+    #     client.close()
 
 DbSession = Annotated[Database, Depends(get_database)]

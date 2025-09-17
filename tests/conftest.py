@@ -37,6 +37,18 @@ def test_user():
     )
 
 @pytest.fixture(scope='function')
+def test_user_admin():
+    # Create a user with a known password hash
+    return User(
+        uid=USER_ID,
+        first_name='Test',
+        last_name='User',
+        email='test@example.com',
+        password_hash=get_password_hash('password123'),
+        admin=True
+    )
+
+@pytest.fixture(scope='function')
 def test_token_data():
     return TokenData(uid=str(uuid4()))
 

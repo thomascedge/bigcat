@@ -100,14 +100,12 @@ def test_crud(client: TestClient, auth_headers):
     # )
 
     # create_response = create_response.json()
-    # logger.debug(create_response)
     booking_id = create_response['uid']
 
     # search bookings
     get_response = client.get('/bookings/search', headers=auth_headers, params={'booking_id': booking_id})
     assert get_response.status_code == 200
     get_response = get_response.json()
-    logger.debug(get_response)
     assert any(booking['uid'] for booking in get_response['booking_list'])
 
     get_response = client.get('/bookings/search', headers=auth_headers, params={'venue': 'TESTVENUE'})
@@ -130,7 +128,6 @@ def test_crud(client: TestClient, auth_headers):
     # )
 
     # create_response = create_response.json()
-    # logger.debug(f'Response: {create_response}')
     # booking_id = create_response['uid']
 
     # add seat to bookng
@@ -153,7 +150,6 @@ def test_crud(client: TestClient, auth_headers):
 
     # cancel booking
     patch_response = client.patch(f'/bookings/{booking_id}/cancel', headers=auth_headers)
-    logger.debug(patch_response.json())
     assert patch_response.status_code == 200
     patch_response = patch_response.json()
     assert patch_response['status'] == BookingStatus.CANCELED.value
@@ -173,7 +169,6 @@ def test_crud(client: TestClient, auth_headers):
     # )
 
     # create_response = create_response.json()
-    # logger.debug(f'Response: {create_response}')
     # booking_id = create_response['uid']
 
     # edit booking
@@ -236,7 +231,6 @@ def test_booking_authorization(client: TestClient, auth_headers):
 
     for method, endpoint in endpoints:
         response = client.request(method, endpoint)
-        logger.debug(response.__dict__)
         assert response.status_code == 401
 
 def test_booking_not_found(client: TestClient, auth_headers):
