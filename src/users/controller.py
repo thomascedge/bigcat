@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, status
 from pymongo.database import Database
-from src.users import model
-from src.users import service
-from src.database.core import DbSession
-from src.auth.service import CurrentUser
+from users import model
+from users import service
+from database.core import DbSession
+from auth.service import CurrentUser
 
 router = APIRouter(
     prefix='/users',

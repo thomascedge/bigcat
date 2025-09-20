@@ -1,14 +1,14 @@
 import pytest
 from datetime import datetime, timezone
 from uuid import uuid4
-from src.database.core import client as db_client
-from src.auth.model import TokenData
-from src.auth.service import get_password_hash
-from src.rate_limiting import limiter
-from src.users.model import User
-from src.concerts.model import Concert, ConcertStatus
-from src.bookings.model import Booking, BookingStatus, PaymentStatus
-from src.seats.model import Seat, SeatType, SeatStatus
+from database.core import client as db_client
+from auth.model import TokenData
+from auth.service import get_password_hash
+from rate_limiting import limiter
+from users.model import User
+from concerts.model import Concert, ConcertStatus
+from bookings.model import Booking, BookingStatus, PaymentStatus
+from seats.model import Seat, SeatType, SeatStatus
 
 USER_ID = str(uuid4())
 CONFIRMATION_ID = str(uuid4())[:8]
@@ -54,8 +54,8 @@ def test_token_data():
 
 @pytest.fixture(scope='function')
 def client(db_session):
-    from src.main import app
-    from src.database.core import get_database
+    from main import app
+    from database.core import get_database
 
     # diable rate limiting for tests
     limiter.reset()

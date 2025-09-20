@@ -2,11 +2,11 @@ from fastapi import Depends
 from typing import Optional
 from pymongo.database import Database
 from uuid import uuid4
-from src.auth.model import TokenData
-from src.database.core import get_database
-from src.concerts.model import *
-from src.exceptions import ConcertNotFoundError, ConcertCreationError, NoAdminPermissions
-from src.logging import logger
+from auth.model import TokenData
+from database.core import get_database
+from concerts.model import *
+from exceptions import ConcertNotFoundError, ConcertCreationError, NoAdminPermissions
+from loguru_log import logger
 
 def get_concert_by_id(concert_id: str, db: Database = Depends(get_database)) -> Concert:
     concert = db['concert'].find_one({'uid': concert_id})

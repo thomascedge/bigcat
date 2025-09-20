@@ -11,7 +11,6 @@ from src.exceptions import (
     BookingCreationError,
     NoAdminPermissions
 )
-from src.logging import logger
 
 class TestBookingService:
     def test_get_booking_by_id(self, test_user, test_booking, db_session):

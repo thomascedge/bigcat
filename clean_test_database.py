@@ -1,4 +1,4 @@
-from src.database.core import client
+from database.core import client
 from loguru import logger as clean_log
 
 database = client['bigcat']

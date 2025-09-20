@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from src.auth.controller import router as auth_router
-from src.users.controller import router as users_router
-from src.concerts.controller import router as concerts_router
-from src.seats.controller import router as seats_router
-from src.bookings.controller import router as bookings_router
+from auth.controller import router as auth_router
+from users.controller import router as users_router
+from concerts.controller import router as concerts_router
+from seats.controller import router as seats_router
+from bookings.controller import router as bookings_router
 
 def register_routes(app: FastAPI):
     app.include_router(auth_router)

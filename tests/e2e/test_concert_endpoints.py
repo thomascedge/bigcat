@@ -3,7 +3,6 @@ from fastapi.testclient import TestClient
 from uuid import uuid4
 from src.concerts.model import Concert, ConcertStatus, ConcertResponse
 from datetime import datetime
-from src.logging import logger
 
 concert_id = str(uuid4())
 

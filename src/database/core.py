@@ -6,7 +6,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from pymongo.database import Database
 from typing import Annotated
-from src.logging import logger
+from loguru_log import logger
 
 load_dotenv()
 

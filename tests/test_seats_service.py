@@ -3,7 +3,6 @@ from datetime import datetime
 from src.seats import service as seats_service
 from src.seats.model import *
 from src.exceptions import SeatCreationError, SeatNotFoundError, SeatUnavailableError, NoAdminPermissions
-from src.logging import logger
 
 class TestSeatsService:
     def test_get_seat_by_id(self, test_seat, db_session):

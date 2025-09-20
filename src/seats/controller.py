@@ -1,18 +1,14 @@
 from fastapi import APIRouter, status
-from src.seats import model
-from src.seats import service
-from src.database.core import DbSession
-from src.auth.service import CurrentUser
+from seats import model
+from seats import service
+from database.core import DbSession
+from auth.service import CurrentUser
 from typing import Optional
 
 router = APIRouter(
     prefix='/seats',
     tags=['Seats']
 )
-
-@router.get('/test/{seat}')
-def testing(seat: str):
-    from src.logging import logger
 
 @router.get('/{seat_id}', response_model=model.Seat)
 def get_seat_by_id(seat_id: str, db: DbSession):

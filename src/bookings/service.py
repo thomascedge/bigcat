@@ -2,12 +2,12 @@ from fastapi import Depends
 from pymongo.database import Database
 from uuid import uuid4
 from datetime import datetime
-from src.bookings.model import *
-from src.seats.model import SeatStatus
-from src.exceptions import BookingNotFoundError
-from src.auth.model import TokenData
-from src.database.core import get_database
-from src.exceptions import (
+from bookings.model import *
+from seats.model import SeatStatus
+from exceptions import BookingNotFoundError
+from auth.model import TokenData
+from database.core import get_database
+from exceptions import (
     BookingNotFoundError, 
     BookingCreationError,
     BookingAlreadyUpdatedError,
@@ -16,7 +16,7 @@ from src.exceptions import (
     SeatUnavailableError,
     NoAdminPermissions
 )
-from src.logging import logger
+from loguru_log import logger
 
 def get_booking_by_id(current_user: TokenData, booking_id: str, db: Database=Depends(get_database)) -> Booking:
     booking = db['booking'].find_one({'uid': booking_id})

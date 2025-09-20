@@ -3,7 +3,6 @@ from fastapi.testclient import TestClient
 from uuid import uuid4
 from src.seats.model import Seat, SeatResponse, SeatStatus, SeatType
 from datetime import datetime
-from src.logging import logger
 
 UID = str(uuid4())
 seat = {

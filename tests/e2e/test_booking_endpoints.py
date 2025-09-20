@@ -7,7 +7,6 @@ from src.seats.model import Seat, SeatType, SeatStatus, SeatResponse
 from src.concerts.model import ConcertStatus
 from src.users.model import User
 from datetime import datetime
-from src.logging import logger
 
 BOOKING_ID = str(uuid4())
 USER_ID = str(uuid4())

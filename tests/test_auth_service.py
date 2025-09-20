@@ -6,7 +6,6 @@ from src.auth import service as auth_service
 from src.auth.model import RegisterUserRequest
 from src.exceptions import AuthenticationError
 from src.users.model import User
-from src.logging import logger
 
 class TestAuthService():
     def test_verify_password(self):

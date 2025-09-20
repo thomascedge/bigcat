@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, status
 from pymongo.database import Database
 from datetime import datetime
 from typing import Optional
-from src.concerts import model
-from src.concerts import service
-from src.database.core import DbSession
-from src.auth.service import CurrentUser
+from concerts import model
+from concerts import service
+from database.core import DbSession
+from auth.service import CurrentUser
 
 router = APIRouter(
     prefix='/concerts',

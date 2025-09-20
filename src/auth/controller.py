@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pymongo.database import Database
 from typing import Annotated
-from src.auth import service
-from src.auth.model import *
-from src.database.core import get_database
-from src.rate_limiting import limiter
+from auth import service
+from auth.model import *
+from database.core import get_database
+from rate_limiting import limiter
 
 router = APIRouter(
     prefix='/auth',
