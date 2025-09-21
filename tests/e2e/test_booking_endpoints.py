@@ -1,11 +1,11 @@
 import json
 from fastapi.testclient import TestClient
 from uuid import uuid4
-from src.auth.service import get_password_hash
-from src.bookings.model import Booking, BookingResponse, BookingStatus, PaymentStatus, BookingRequest, UpdateBookingRequest
-from src.seats.model import Seat, SeatType, SeatStatus, SeatResponse
-from src.concerts.model import ConcertStatus
-from src.users.model import User
+from app.auth.service import get_password_hash
+from app.bookings.model import Booking, BookingResponse, BookingStatus, PaymentStatus, BookingRequest, UpdateBookingRequest
+from app.seats.model import Seat, SeatType, SeatStatus, SeatResponse
+from app.concerts.model import ConcertStatus
+from app.users.model import User
 from datetime import datetime
 
 BOOKING_ID = str(uuid4())

@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
-from api import register_routes
 from mangum import Mangum
+from app.api import register_routes
 
 app = FastAPI()
 register_routes(app)

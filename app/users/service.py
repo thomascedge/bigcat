@@ -1,11 +1,11 @@
 from fastapi import HTTPException, Depends
 from pymongo.database import Database
 from bson.objectid import ObjectId
-from users.model import *
-from exceptions import UserNotFoundError, InvalidPasswordError, PasswordMismatchError
-from auth.service import verify_password, get_password_hash
-from loguru_log import logger
-from database.core import get_database
+from app.users.model import *
+from app.exceptions import UserNotFoundError, InvalidPasswordError, PasswordMismatchError
+from app.auth.service import verify_password, get_password_hash
+from app.loguru_log import logger
+from app.database.core import get_database
 
 def get_user_by_id(user_id: str, db: Database=Depends(get_database)) -> User:
     user = db['user'].find_one({'uid': user_id})

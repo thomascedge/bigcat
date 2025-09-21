@@ -2,11 +2,11 @@ from fastapi import Depends
 from typing import Optional
 from pymongo.database import Database
 from uuid import uuid4
-from database.core import get_database
-from auth.model import TokenData
-from seats.model import *
-from exceptions import SeatNotFoundError, SeatCreationError, NoAdminPermissions
-from loguru_log import logger
+from app.database.core import get_database
+from app.auth.model import TokenData
+from app.seats.model import *
+from app.exceptions import SeatNotFoundError, SeatCreationError, NoAdminPermissions
+from app.loguru_log import logger
 
 
 def get_seat_by_id(seat_id: str, db: Database=Depends(get_database)) -> Seat:

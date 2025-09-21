@@ -28,4 +28,4 @@ flowchart LR
 ```
 
 ## Endpoints Documentation
-Documentation on the end points can be found by running `fastapi dev src/main.py`.
+Documentation on the end points can be found by running `fastapi dev app/main.py`.

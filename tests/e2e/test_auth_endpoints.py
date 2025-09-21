@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from src.auth.model import RegisterUserRequest
+from app.auth.model import RegisterUserRequest
 
 def test_register_and_login_flow(client: TestClient):
     # Test registration

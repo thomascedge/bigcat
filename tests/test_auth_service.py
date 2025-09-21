@@ -2,10 +2,10 @@ import pytest
 from datetime import timedelta
 from uuid import uuid4
 from fastapi.security import OAuth2PasswordRequestForm
-from src.auth import service as auth_service
-from src.auth.model import RegisterUserRequest
-from src.exceptions import AuthenticationError
-from src.users.model import User
+from app.auth import service as auth_service
+from app.auth.model import RegisterUserRequest
+from app.exceptions import AuthenticationError
+from app.users.model import User
 
 class TestAuthService():
     def test_verify_password(self):

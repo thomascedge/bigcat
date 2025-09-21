@@ -10,11 +10,11 @@ from dotenv import load_dotenv
 from typing import Annotated
 from datetime import timedelta, datetime, timezone
 from passlib.context import CryptContext
-from loguru_log import logger
-from exceptions import AuthenticationError
-from auth.model import *
-from users.model import User
-from database.core import get_database
+from app.loguru_log import logger
+from app.exceptions import AuthenticationError
+from app.auth.model import *
+from app.users.model import User
+from app.database.core import get_database
 
 load_dotenv()
 

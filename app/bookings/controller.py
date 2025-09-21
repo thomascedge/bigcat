@@ -1,8 +1,8 @@
 from fastapi import APIRouter, status
-from bookings import model
-from bookings import service
-from auth.service import CurrentUser
-from database.core import DbSession
+from app.bookings import model
+from app.bookings import service
+from app.auth.service import CurrentUser
+from app.database.core import DbSession
 
 router = APIRouter(
     prefix='/bookings',

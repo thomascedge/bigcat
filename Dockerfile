@@ -5,14 +5,14 @@ LABEL maintainer="thomas@thomascedge.com"
 # unbuffered env variables
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR /src
+WORKDIR /app
 
 # copy requirements file over
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # copy application to container
-COPY . /src 
+COPY . /app 
 
 # FastAPI port
 EXPOSE 8000
@@ -21,4 +21,4 @@ EXPOSE 8000
 HEALTHCHECK CMD ["curl", "--fail", "http://localhost:8000", "||", "exit 1"]
 
 # run the application
-CMD ["uvicorn", "main:src", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

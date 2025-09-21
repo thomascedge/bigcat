@@ -1,8 +1,8 @@
 from fastapi import APIRouter, status
-from seats import model
-from seats import service
-from database.core import DbSession
-from auth.service import CurrentUser
+from app.seats import model
+from app.seats import service
+from app.database.core import DbSession
+from app.auth.service import CurrentUser
 from typing import Optional
 
 router = APIRouter(

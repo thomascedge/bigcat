@@ -1,8 +1,8 @@
 import pytest
 from datetime import datetime
-from src.seats import service as seats_service
-from src.seats.model import *
-from src.exceptions import SeatCreationError, SeatNotFoundError, SeatUnavailableError, NoAdminPermissions
+from app.seats import service as seats_service
+from app.seats.model import *
+from app.exceptions import SeatCreationError, SeatNotFoundError, SeatUnavailableError, NoAdminPermissions
 
 class TestSeatsService:
     def test_get_seat_by_id(self, test_seat, db_session):

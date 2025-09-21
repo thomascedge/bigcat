@@ -1,7 +1,7 @@
 import json
 from fastapi.testclient import TestClient
 from uuid import uuid4
-from src.concerts.model import Concert, ConcertStatus, ConcertResponse
+from app.concerts.model import Concert, ConcertStatus, ConcertResponse
 from datetime import datetime
 
 concert_id = str(uuid4())

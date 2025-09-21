@@ -1,10 +1,10 @@
 import pytest
 from datetime import datetime
 from uuid import uuid4
-from src.bookings import service as bookings_service
-from src.bookings.model import *
-from src.seats.model import Seat, SeatType, SeatStatus
-from src.exceptions import (
+from app.bookings import service as bookings_service
+from app.bookings.model import *
+from app.seats.model import Seat, SeatType, SeatStatus
+from app.exceptions import (
     BookingUpdateCode,
     BookingNotFoundError,
     BookingAlreadyUpdatedError,

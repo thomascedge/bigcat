@@ -1,9 +1,9 @@
 import pytest
 from datetime import datetime
 from uuid import uuid4
-from src.concerts import service as concerts_service
-from src.concerts.model import Concert, ConcertStatus
-from src.exceptions import ConcertNotFoundError, ConcertCreationError, NoAdminPermissions
+from app.concerts import service as concerts_service
+from app.concerts.model import Concert, ConcertStatus
+from app.exceptions import ConcertNotFoundError, ConcertCreationError, NoAdminPermissions
 
 class TestConcertsService:
     def test_get_concert_by_id(self, test_concert, db_session):
