@@ -1,23 +1,49 @@
-name: Docker Image
+name: Docker to Cloud Run
+
+env:
+  SERVICE_NAME: bigcat
+  DOCKER_IMAGE_URL: us-south1-docker.pkg.dev/bigcat/bigcat/bigcat
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Login to docker hub
+      - name: Google Cloud Auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Setup Cloud SDK
+        uses: 'google-github-actions/setup-glcoud@v2'
+
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and Push Image
         uses: docker/build-push-action@v6
         with:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/bigcat:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          echo SERVICE_NAME $SERVICE_NAME
+          gcloud run deploy $SERVICE_NAME \
+            --image ${{ env.DOCKER_IMAGE_URL }}:latest \
+            --platform managed \
+            --region us-south-1 \
+            --allow-unauthenticated
