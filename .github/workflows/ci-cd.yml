@@ -2,7 +2,7 @@ name: Docker to Cloud Run
 
 env:
   SERVICE_NAME: bigcat
-  DOCKER_IMAGE_URL: us-south1-docker.pkg.dev/bigcat-472715/bigcat
+  DOCKER_IMAGE_URL: us-south1-docker.pkg.dev/bigcat/bigcat/bigcat
 
 on:
   push:
