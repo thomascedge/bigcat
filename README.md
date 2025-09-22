@@ -6,6 +6,19 @@ bigcat is a concert ticketing system similar to Ticketmaster or Eventbrite. The 
 
 To run, use `docker-compose up --build` in your terminal.
 
+Use this command to login and get a bearer token.
+```python
+
+import requests
+
+payload = {
+	'email': '<YOUR_EMAIL>',
+	'password': '<YOUR_PASSWORD>'
+}
+
+token = requests.post(f'/auth/token', data=payload)
+```
+
 ## System Design
 This is a python-based project that uses FastAPI endpoints to connect to connect a client to the booking service housed in the API Gateway. The user can search for or book tickets. Once their data is validated, the database updates and the client recieves a response.
 

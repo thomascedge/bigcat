@@ -3,7 +3,7 @@ FROM python:3.10-slim
 LABEL maintainer="thomas@thomascedge.com"
 
 # unbuffered env variables
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
