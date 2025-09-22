@@ -6,7 +6,7 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
-    setps:
+    steps:
       -
         name: Build and push
         uses: docker/build-push-action@v6
