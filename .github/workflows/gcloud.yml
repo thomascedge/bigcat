@@ -1,4 +1,4 @@
-# name: Docker to Cloud Run
+# name: Deploy to Google Cloud.
 
 # env:
 #   SERVICE_NAME: bigcat
