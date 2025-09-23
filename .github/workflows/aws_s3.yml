@@ -30,7 +30,7 @@ jobs:
           cp -r app/* package/
           pip install -r app/requirements.txt -t package/
           cd package
-          zip -r ../bigcat.zip
+          zip -r ../bigcat.zip .
           cd ..
 
       - name: Upload to S3
@@ -42,4 +42,3 @@ jobs:
           aws_bucket_name: s3://bigcat-thomas
           source_dir: .
           file_path: bigcat.zip
-          
