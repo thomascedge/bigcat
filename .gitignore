@@ -219,3 +219,6 @@ __marimo__/
 /logs
 
 cloud-key.json
+.gitub/workflows/aws_s3.yml
+.gitub/workflows/gcloud.yml
+.gitub/workflows/heroku.yml
