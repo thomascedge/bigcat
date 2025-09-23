@@ -15,28 +15,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          python-version: '3.10'
 
-      - name: Build and Push Image
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/bigcat:latest
+      - name: Install Dependencies
+        working-directory: ./app
+        run: pip install -r requirements.txt
 
-      - name: Configure AWS Credentials
+      - name: Package Application
+        run: |
+          mkdir -p package
+          cp -r app/* package/
+          pip install -r app/requirements.txt -t package/
+          cd package
+          zip -r ../bigcat.zip
+          cd ..
+
+      - name: Upload to S3
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
-
-      - name: Small Checkout
-        run: ls -R
-
-      - name: Upload to S3
-        run: aws s3 sync ./build/ s3://bigcat-thomas
+          aws_bucket_name: s3://bigcat-thomas
+          source_dir: .
+          file_path: bigcat.zip
+          
