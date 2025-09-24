@@ -55,36 +55,35 @@ jobs:
             --push .
           echo "image=${{ steps.login-ecr.outputs.registry }}/bigcat:latest" >> $GITHUB_ENV
 
-      - name: Create ECS task definition
-        run: |
-          cat <<EOF > ecs-task-def.json
-          {
-            "family": "bigcat-task",
-            "networkMode": "awsvpc",
-            "containerDefinitions": [
-              {
-                "name": "bigcat-app",
-                "image": "dummy",
-                "essential": true,
-                "portMappings": [
-                  {
-                    "containerPort": 8000,
-                    "hostPort": 8000
-                  }
-                ]
-              }
-            ],
-            "requiresCompatibilities": ["FARGATE"],
-            "cpu": "256",
-            "memory": "512"
-          }
-          EOF
-
+      # - name: Create ECS task definition
+      #   run: |
+      #     cat <<EOF > ecs-task-def.json
+      #     {
+      #       "family": "bigcat-task",
+      #       "networkMode": "awsvpc",
+      #       "containerDefinitions": [
+      #         {
+      #           "name": "bigcat-app",
+      #           "image": "dummy",
+      #           "essential": true,
+      #           "portMappings": [
+      #             {
+      #               "containerPort": 8000,
+      #               "hostPort": 8000
+      #             }
+      #           ]
+      #         }
+      #       ],
+      #       "requiresCompatibilities": ["FARGATE"],
+      #       "cpu": "256",
+      #       "memory": "512"
+      #     }
+      #     EOF
 
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ecs-task-def.json
-          service: fastapi-service
-          cluster: fastapi-cluster
+          service: bigcat-service
+          cluster: bigcat-cluster
           wait-for-service-stability: true
