@@ -2,6 +2,7 @@ from fastapi import HTTPException, Depends
 from pymongo.database import Database
 from bson.objectid import ObjectId
 from app.users.model import *
+from app.auth.model import TokenData
 from app.exceptions import UserNotFoundError, InvalidPasswordError, PasswordMismatchError
 from app.auth.service import verify_password, get_password_hash
 from app.loguru_log import logger
@@ -49,3 +50,17 @@ def change_user_admin_rights(user_id: str, has_rights: bool, db: Database=Depend
         logger.info(f'Rights successfully revoked from {user_id}.')
 
     return get_user_by_id(user_id, db)
+
+def get_user(current_user: TokenData, db: Database=Depends(get_database)) -> GetUsersResponse:
+    if current_user.admin:
+        users_list = [User(**user) for user in db['user'].find()]
+        users_list_no_password = []
+
+        for user in users_list:
+            user.password_hash = None
+            user.admin = None
+
+            users_list_no_password.append(user)
+
+        return GetUsersResponse(users_list=users_list)
+    

@@ -18,3 +18,6 @@ def get_current_user(current_user: CurrentUser, db: DbSession):
 def change_password(password_change: model.PasswordChange, current_user: CurrentUser, db: DbSession):
     service.change_password(current_user.uid, password_change, db)
     
+@router.get('/', response_model=model.GetUsersResponse)
+def get_users(current_user: CurrentUser, db: DbSession):
+    return service.get_user(current_user, db)
