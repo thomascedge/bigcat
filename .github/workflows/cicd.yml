@@ -48,6 +48,10 @@ jobs:
           container-name: bigcat
           image: ${{ env.IMAGE }}
 
+      - name: Remove invalid keys
+        run: |
+          jq 'del(.enableFaultInjection)' ecs-task-def.json > ecs-task-def-clean.json
+
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
