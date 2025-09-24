@@ -40,13 +40,12 @@ jobs:
             --query "taskDefinition" \
             --output json > ecs-task-def.json
 
-
       - name: Render ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ecs-task-def.json
-          container-name: bigcat-app
+          container-name: bigcat
           image: ${{ env.IMAGE }}
 
       - name: Deploy to Amazon ECS
