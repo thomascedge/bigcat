@@ -50,7 +50,7 @@ jobs:
 
       - name: Remove invalid keys
         run: |
-          jq 'del(.enableFaultInjection)' ecs-task-def.json > ecs-task-def-clean.json
+          jq 'del(.enableFaultInjection) | .containerDefinitions |= map(del(.enableFaultInjection))' ecs-task-def.json > tmp.json && mv tmp.json ecs-task-def.json
 
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
