@@ -4,44 +4,38 @@ bigcat is a concert ticketing system similar to Ticketmaster or Eventbrite. The 
 
 ## Play with bigcat
 
-To run, use `docker-compose up --build` in your terminal.
+To run, use this following command. Please send me a message hello@thomascedge.com for an account login and the url. Otherwise feel free to run the Dockerfile on your machine and use any of the requests that do not require authorization.
 
-Use this command to login and get a bearer token.
 ```python
 
 import requests
 
 payload = {
 	'email': '<YOUR_EMAIL>',
-	'password': '<YOUR_PASSWORD>'
+	'password': '<YOUR_PASSWORD>',
+	'grant_type: 'password'
 }
 
-token = requests.post(f'/auth/token', data=payload)
+response = requests.post(f'{base_url}/auth/token', data=payload)
+
+if response.status_code == 200:
+    data = response.json()
+    token = data['access_token']
+    print('Successfully signed in.')
+
+    headers = {"Authorization": f"Bearer {token}"}
+else:
+    print('Cannot login. Please ensure credentials are correct.')
 ```
 
-## System Design
-This is a python-based project that uses FastAPI endpoints to connect to connect a client to the booking service housed in the API Gateway. The user can search for or book tickets. Once their data is validated, the database updates and the client recieves a response.
-
-```mermaid
-flowchart LR
-	A[Client]
-	B{API Gateway}
-	C[Bookings Service]
-	D[Concerts Service]
-	E[Seats Service]
-	F[Users Service]
-	G[(MongoDB Database)]
-
-	A <--> B
-	B <--> C
-	B <--> D
-	B <--> E
-	B <--> F
-	C <--> G
-	D <--> G
-	E <--> G
-	F <--> G
-```
-
-## Endpoints Documentation
-Documentation on the end points can be found by running `fastapi dev app/main.py`.
+## Endpoints
+Below is a list of example endpoints. All GET endpoints are listed.
+| Method | Endpoint                  | Description                                                                                                | Requires Authorization |
+|--------|---------------------------|------------------------------------------------------------------------------------------------------------|------------------------|
+| GET    | /bookings                 | Gets all bookings from database.                                                                           | ✅                     |
+| GET    | /bookings/{booking_id}    | Searches database for individual concert based on booking_id.                                              | ✅                     |
+| GET    | /concerts                 | Gets all concerts from database.                                                                           |                        |
+| GET    | /concerts/id/{concert_id} | Searches database for individual concert based on concert_id.                                              |                        |
+| GET    | /concerts/search?...      | Searches database for concert based on query params: artist, tour_name, venue, location, concert_datetime. |                        |
+| GET    | /seats                    | Gets all seats from database.                                                                              |                        |
+| GET    | /seats/id/{seat_id}       | Searches database for individual concert based on booking_id.                                              |                        |
