@@ -40,17 +40,17 @@ jobs:
             --query "taskDefinition" \
             --output json > ecs-task-def.json
 
+      - name: Remove invalid keys
+        run: |
+          jq 'del(.enableFaultInjection) | .containerDefinitions |= map(del(.enableFaultInjection))' ecs-task-def.json > tmp.json && mv tmp.json ecs-task-def.json
+
       - name: Render ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ecs-task-def.json
-          container-name: bigcat
+          container-name: bigcat-app
           image: ${{ env.IMAGE }}
-
-      - name: Remove invalid keys
-        run: |
-          jq 'del(.enableFaultInjection) | .containerDefinitions |= map(del(.enableFaultInjection))' ecs-task-def.json > tmp.json && mv tmp.json ecs-task-def.json
 
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
