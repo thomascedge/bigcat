@@ -11,14 +11,14 @@ router = APIRouter(
 
 @router.get('/', response_model=model.BookingResponse)
 def get_all_bookings(current_user: CurrentUser, db: DbSession):
-    return service.search_booking(current_user, db)
+    return service.get_all_bookings(current_user, db)
 
-@router.get('/search', response_model=model.BookingResponse)
-def search_booking(current_user: CurrentUser,
-                   db: DbSession, 
-                   booking_id: str|None=None, 
-                   venue: str|None=None):
-    return service.search_booking(current_user, booking_id, venue, db)
+# @router.get('/search', response_model=model.BookingResponse)
+# def search_booking(current_user: CurrentUser,
+#                    db: DbSession, 
+#                    booking_id: str|None=None, 
+#                    venue: str|None=None):
+#     return service.search_booking(current_user, booking_id, venue, db)
 
 @router.post('/', status_code=status.HTTP_201_CREATED)
 def book_tickets(current_user: CurrentUser, request: model.BookingRequest, db: DbSession):

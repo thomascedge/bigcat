@@ -17,6 +17,15 @@ from app.exceptions import (
 )
 from app.loguru_log import logger
 
+def get_all_bookings(current_user: TokenData, db: Database=Depends(get_database)) -> BookingResponse:
+    if current_user.admin:
+        booking_list = [Booking(**booking) for booking in db['booking'].find()]
+    else:
+        booking_list = [Booking(**booking) for booking in db['booking'].find({'uid': current_user.uid})]
+
+    logger.info(f'Retrieved {len(booking_list)} bookings for user {current_user.uid}')
+    return BookingResponse(booking_list=booking_list)        
+
 def get_booking_by_id(current_user: TokenData, booking_id: str, db: Database=Depends(get_database)) -> Booking:
     booking = db['booking'].find_one({'uid': booking_id})
     if booking is None:
@@ -27,25 +36,25 @@ def get_booking_by_id(current_user: TokenData, booking_id: str, db: Database=Dep
         booking['seats'] = []
     return Booking(**booking)
 
-def search_booking(current_user: TokenData, booking_id: str|None=None, venue: str|None=None, db: Database=Depends(get_database)) -> BookingResponse:
-    if booking_id or venue:
-        if booking_id and not venue:
-            query = {'uid': booking_id}
-        elif not booking_id and venue:
-            query = {'venue': venue}
+# def search_booking(current_user: TokenData, booking_id: str|None=None, venue: str|None=None, db: Database=Depends(get_database)) -> BookingResponse:
+#     if booking_id or venue:
+#         if booking_id and not venue:
+#             query = {'uid': booking_id}
+#         elif not booking_id and venue:
+#             query = {'venue': venue}
 
-        booking_list = [Booking(**booking) for booking in db['booking'].find(query)]
+#         booking_list = [Booking(**booking) for booking in db['booking'].find(query)]
         
-        if len(booking_list) != 0:
-            logger.info(f'Retrieved {len(booking_list)} bookings.')
-            return BookingResponse(booking_list=booking_list)
-        else:
-            logger.warning(f'No booking found.')
-            raise BookingNotFoundError() 
-    else:
-        bookings_list = [booking for booking in db['bookings'].find({'uid': current_user.uid})] 
-        logger.info(f'Retrieved {len(bookings_list)} bookings for user {current_user.uid}')
-        return BookingResponse(booking_list=bookings_list)
+#         if len(booking_list) != 0:
+#             logger.info(f'Retrieved {len(booking_list)} bookings.')
+#             return BookingResponse(booking_list=booking_list)
+#         else:
+#             logger.warning(f'No booking found.')
+#             raise BookingNotFoundError() 
+#     else:
+#         bookings_list = [booking for booking in db['bookings'].find({'uid': current_user.uid})] 
+#         logger.info(f'Retrieved {len(bookings_list)} bookings for user {current_user.uid}')
+#         return BookingResponse(booking_list=bookings_list)
 
 def book_tickets(current_user: TokenData, concert_id: str, seat_ids: list[str], db: Database=Depends(get_database)) -> Booking:
     try:
