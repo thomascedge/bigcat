@@ -30,7 +30,7 @@ jobs:
 
   aws:
     runs-on: ubuntu-latest
-    dependsOn: docker
+    needs: docker
     steps:
       - name: Log in to Amazon ECR
         id: login-ecr
