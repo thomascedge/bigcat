@@ -23,7 +23,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, tag, and push image to Amazon ECR
+      - name: Build, tag, and push image Docker Image
         run: |
           IMAGE_TAG=${{ github.sha }}
           docker buildx build \
@@ -33,11 +33,19 @@ jobs:
             --push .
           echo "IMAGE=${{ steps.login-ecr.outputs.registry }}/bigcat:$IMAGE_TAG" >> $GITHUB_ENV
 
+      - name: Pull existing ECS task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition bigcat-task \
+            --query "taskDefinition" \
+            --output json > ecs-task-def.json
+
+
       - name: Render ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: bigcat-task
+          task-definition: ecs-task-def.json
           container-name: bigcat-app
           image: ${{ env.IMAGE }}
 
