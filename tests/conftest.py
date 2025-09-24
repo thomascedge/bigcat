@@ -1,14 +1,14 @@
 import pytest
 from datetime import datetime, timezone
 from uuid import uuid4
-from database.core import client as db_client
-from auth.model import TokenData
-from auth.service import get_password_hash
-from rate_limiting import limiter
-from users.model import User
-from concerts.model import Concert, ConcertStatus
-from bookings.model import Booking, BookingStatus, PaymentStatus
-from seats.model import Seat, SeatType, SeatStatus
+from app.database.core import client as db_client
+from app.auth.model import TokenData
+from app.auth.service import get_password_hash
+from app.rate_limiting import limiter
+from app.users.model import User
+from app.concerts.model import Concert, ConcertStatus
+from app.bookings.model import Booking, BookingStatus, PaymentStatus
+from app.seats.model import Seat, SeatType, SeatStatus
 
 USER_ID = str(uuid4())
 CONFIRMATION_ID = str(uuid4())[:8]

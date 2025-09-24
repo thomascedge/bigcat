@@ -36,7 +36,7 @@ def test_post(client: TestClient, auth_headers):
 
 def test_get(client: TestClient, auth_headers):
     # get seat
-    get_response = client.get(f'/seats/{seat['uid']}')
+    get_response = client.get(f'/seats/id/{seat['uid']}')
     assert get_response.status_code == 200
     get_response = get_response.json()
     assert seat['uid'] == get_response['uid']

@@ -10,7 +10,7 @@ router = APIRouter(
     tags=['Seats']
 )
 
-@router.get('/{seat_id}', response_model=model.Seat)
+@router.get('/id/{seat_id}', response_model=model.Seat)
 def get_seat_by_id(seat_id: str, db: DbSession):
     return service.get_seat_by_id(seat_id, db)
 
