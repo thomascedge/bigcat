@@ -31,7 +31,7 @@ jobs:
             -t ${{ steps.login-ecr.outputs.registry }}/bigcat:$IMAGE_TAG \
             -t ${{ steps.login-ecr.outputs.registry }}/bigcat:latest \
             --push .
-          echo "image=${{ steps.login-ecr.outputs.registry }}/bigcat:$IMAGE_TAG" >> $GITHUB_ENV
+          echo "IMAGE=${{ steps.login-ecr.outputs.registry }}/bigcat:$IMAGE_TAG" >> $GITHUB_ENV
 
       - name: Render ECS task definition
         id: task-def
