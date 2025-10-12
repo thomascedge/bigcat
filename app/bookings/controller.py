@@ -36,6 +36,6 @@ def remove_seat_from_booking(current_user: CurrentUser, booking_id: str, seat_id
 def cancel_booking(current_user: CurrentUser, booking_id: str, db: DbSession):
     return service.cancel_booking(current_user, booking_id, db)
 
-@router.put('/')
-def edit_booking(current_user: CurrentUser, update_request: model.UpdateBookingRequest, db: DbSession):
-    return service.edit_booking(current_user, update_request.booking_id, update_request.booking_update, db)
+@router.put('/{booking_id}')
+def edit_booking(current_user: CurrentUser, booking_id: str, update_request: model.UpdateBookingRequest, db: DbSession):
+    return service.edit_booking(current_user, booking_id, update_request.booking_id, update_request.booking_update, db)

@@ -23,7 +23,7 @@ app.add_middleware(
 )
 
 
-@app.get('/')
+@app.get('/health', tags=["Health Check"])
 def startup():
     return {'healthcheck': 'OK'}
 
