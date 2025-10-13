@@ -10,8 +10,9 @@ handler = Mangum(app)
 
 # adding middleware for 
 origins = [
-    "http://localhost:3000",           # dev
-    "https://bigcat.thomascedge.com",  # prod
+    "http://localhost:3000",               # dev
+    "https://api.bigcat.thomascedge.com",  # prod
+    "https://bigcat.thomasedge.com"        # prod
 ]
 
 app.add_middleware(
